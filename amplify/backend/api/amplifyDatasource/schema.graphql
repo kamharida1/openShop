@@ -1,0 +1,127 @@
+type Address @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  userID: ID! @index(name: "byUser")
+  User: User @belongsTo(fields: ["userID"])
+  address: String!
+  subAddress: String
+  city: String
+  country: String!
+  fullAddress: String!
+  lat: Float
+  lng: Float
+  location: String
+  postCode: String
+  state: String
+  isSelected: Boolean
+}
+
+type Order @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  userID: ID! @index(name: "byUser")
+  User: User @belongsTo(fields: ["userID"])
+  Address: Address @hasOne
+}
+
+type OrderProduct @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  quantity: Int!
+  option: String
+  Product: Product @hasOne
+  Order: Order @hasOne
+}
+
+type User @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  email: String!
+  firstName: String
+  lastName: String
+  phoneNumber: AWSPhone
+  CartProducts: [CartProduct] @hasMany(indexName: "byUser", fields: ["id"])
+  Orders: [Order] @hasMany(indexName: "byUser", fields: ["id"])
+  Addresses: [Address] @hasMany(indexName: "byUser", fields: ["id"])
+  sub: String
+}
+
+type CartProduct @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  quantity: Int!
+  option: String
+  Product: Product @hasOne
+  userID: ID! @index(name: "byUser")
+  User: User @belongsTo(fields: ["userID"])
+}
+
+type Brand @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  Products: [Product] @hasMany(indexName: "byBrand", fields: ["id"])
+  logo: String
+}
+
+type OptionValue @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  optiontypeID: ID! @index(name: "byOptionType")
+  OptionType: OptionType @belongsTo(fields: ["optiontypeID"])
+}
+
+enum PurposeEnum {
+  VARIANT
+  FEATURE
+  PRODUCT_DETAILS_TEXT
+  PRODUCT_DETAILS_SELECT
+}
+
+type OptionType @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  value: String
+  placeholder: String
+  category: PurposeEnum
+  prototypeID: ID! @index(name: "byPrototype")
+  Prototype: Prototype @belongsTo(fields: ["prototypeID"])
+  OptionValues: [OptionValue] @hasMany(indexName: "byOptionType", fields: ["id"])
+}
+
+type Prototype @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  Category: Category @belongsTo
+  OptionTypes: [OptionType] @hasMany(indexName: "byPrototype", fields: ["id"])
+}
+
+type Category @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  description: String
+  image: String
+  Products: [Product] @hasMany(indexName: "byCategory", fields: ["id"])
+  Prototype: Prototype @hasOne
+}
+
+type Product @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  count: Int!
+  about: String!
+  images: [String!]
+  rating: Float
+  colors: [String]
+  details: AWSJSON
+  price: Float!
+  mockPrice: Float
+  wholesalePrice: Float
+  wholesalePromoPrice: Float
+  features: [String]
+  published: Boolean
+  model: String
+  isFeatured: Boolean
+  isPromoted: Boolean
+  promoPrice: Float
+  categoryID: ID! @index(name: "byCategory")
+  Category: Category! @belongsTo(fields: ["categoryID"])
+  brandID: ID! @index(name: "byBrand")
+  Brand: Brand @belongsTo(fields: ["brandID"])
+  CartProduct: CartProduct @belongsTo
+  OrderProduct: OrderProduct @belongsTo
+}
