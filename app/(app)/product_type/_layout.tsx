@@ -1,23 +1,23 @@
 import { Link, Stack, useRouter } from "expo-router";
 import { Platform, Pressable } from "react-native";
-import { Box, Text } from "../../../etc/_Theme";
+import {  Text } from "../../../etc/_Theme";
 import { FontAwesome } from "@expo/vector-icons";
 
 export const unstable_settings = {
-  initialRouteName: "brands",
+  initialRouteName: "product_types",
 };
 
-export default function BrandLayout() {
+export default function ProductTypeLayout() {
   const router = useRouter();
 
   return (
     <Stack screenOptions={{}}>
       <Stack.Screen
-        name="brands"
+        name="product_types"
         options={{
-          title: "Brands",
+          title: "Product Types",
           headerLargeTitle: true,
-          headerRight: AddBrandButton,
+          headerRight: AddProductTypeButton,
           headerSearchBarOptions: {
             onChangeText: (event) => {
               // Update the query params to match the search query.
@@ -29,9 +29,9 @@ export default function BrandLayout() {
         }}
       />
       <Stack.Screen
-        name="add_brand"
+        name="add_product_type"
         options={{
-          title: "Add Brand",
+          title: "Add Product Type",
           presentation: "modal",
           headerRight: Platform.select({
             ios: DismissComposeButton,
@@ -42,7 +42,7 @@ export default function BrandLayout() {
   );
 }
 
-function AddBrandButton() {
+function AddProductTypeButton() {
   const router = useRouter();
   return (
     <Pressable
@@ -52,9 +52,9 @@ function AddBrandButton() {
         alignItems: "center",
         paddingRight: 8,
       }}
-      onPress={() => router.push("/brand/add_brand")}
+      onPress={() => router.push("/product_type/add_product_type")}
     >
-      <Text variant="body"> Add Brand </Text>
+      <Text style={{ fontSize: 14 }}> Add Product Type </Text>
       <FontAwesome name="sign-out" size={24} color="black" />
     </Pressable>
   );

@@ -19,18 +19,18 @@ export const LinkButton =({
   link
 }: LinkButtonT) => {
   return (
-    <Link style={style}  href={link} asChild>
+    <Link style={style} href={link} asChild>
       <Pressable onPress={onPress}>
         {({ pressed, hovered }) => (
           <View
             style={[
               {
-                borderRadius: 8,
+                borderRadius: 15,
                 paddingHorizontal: 8,
                 paddingVertical: 16,
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: "#990000",
+                backgroundColor: "#3B3C36",
               },
               buttonStyle,
               hovered && { opacity: 0.8 },

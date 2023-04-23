@@ -1,31 +1,30 @@
-import CategoryCard from "../../../etc/cards/category_card";
-import { useRouter, useSearchParams } from "expo-router";
+import { useSearchParams } from "expo-router";
 import { FlatList, TouchableOpacity } from "react-native";
-import { useEffect, useMemo } from "react";
-import { Category } from "../../../src/models";
+import { useMemo } from "react";
+import { ProductType } from "../../../src/models";
 import { useDataStore } from "../../../src/hooks/useDataStoreUpdate";
 import { StyleSheet, Text, View } from "@bacons/react-views";
 
-export default function Categories() {
+export default function ProductTypes() {
   
-  const categories = useQueriedCategories();
-  const {  navigateToUpdate } = useDataStore(Category);
+  const product_types = useQueriedProductTypes();
+  const {  navigateToUpdate } = useDataStore(ProductType);
 
-  function useQueriedCategories() {
+  function useQueriedProductTypes() {
     // const categories = useAppSelector(selectAllCategories);
-    const { data: categories } = useDataStore(Category);
+    const { data: product_types } = useDataStore(ProductType);
 
     const { q } = useSearchParams<{ q: string }>();
 
     return useMemo(
       () =>
-        categories.filter((item) => {
+        product_types.filter((item) => {
           if (!q) {
             return true;
           }
           return item.name.toLowerCase().includes(q?.toLowerCase());
         }),
-      [q, categories]
+      [q, product_types]
     );
   }
 
@@ -33,14 +32,11 @@ export default function Categories() {
     <FlatList
       contentInsetAdjustmentBehavior="automatic"
       scrollEventThrottle={16}
-      data={categories}
+      data={product_types}
       renderItem={({ item }) => (
-        <TouchableOpacity
-          style={styles.container}
-          onPress={() => navigateToUpdate(item, "product_types", "[id]", "")}
-        >
-          <Text>{item.name}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.container} onPress={() => navigateToUpdate(item, "/product_type/[id]", "")}>
+            <Text>{item.name}</Text>
+          </TouchableOpacity>
       )}
       onEndReachedThreshold={0.5}
       stickyHeaderIndices={[0]}

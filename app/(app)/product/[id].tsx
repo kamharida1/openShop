@@ -1,8 +1,6 @@
 import { useRouter, useSearchParams } from "expo-router";
 import products from "../../../data/products";
 import { Box, Text } from "../../../etc/_Theme";
-import { Image } from "@bacons/react-views";
-import { FlatList } from "react-native-gesture-handler";
 import ImageCarousel from "../../../etc/cards/image_carousel";
 import { Screen } from "../../../etc/views/screen";
 

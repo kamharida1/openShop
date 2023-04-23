@@ -1,7 +1,5 @@
 import { Stack, useRouter } from "expo-router";
 import { Provider } from "react-redux";
-import { store } from "../../src/store";
-
 import { Amplify } from "aws-amplify";
 import awsconfig from "../../src/aws-exports";
 
@@ -14,7 +12,6 @@ export const unstable_settings = {
 export default function AppLayout() {
   const router = useRouter();
   return (
-    <Provider store={store}>
       <Stack
         screenOptions={{
           headerShown: false,
@@ -28,6 +25,5 @@ export default function AppLayout() {
           }}
         />
       </Stack>
-    </Provider>
   );
 }

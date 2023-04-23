@@ -1,31 +1,17 @@
-import { DataStore } from "aws-amplify";
 import { Stack, useRouter, useSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
 import { Image } from "react-native";
 import { ReButton } from "../../../etc/buttons/re_button";
 import { Screen } from "../../../etc/views/screen";
 import { Box, Text } from "../../../etc/_Theme";
-import { useCategoryAPI } from "../../../src/features/category/API";
+import { useDataStore } from "../../../src/hooks/useDataStoreUpdate";
 import { Category } from "../../../src/models";
-import {
-  deleteCategory,
-  selectCategoryById,
-} from "../../../src/features/category/categorySlice";
-import { useAppDispatch, useAppSelector } from "../../../src/hooks";
 
 export default function Categore() {
-  // const [category, setCategory] = useState<Category | undefined>(undefined);
-  const router = useRouter();
   const { id } = useSearchParams();
 
-  // useEffect(() => {
-  //   DataStore.query(Category, categoryId).then(setCategory)
-  // }, [categoryId]);
-
-  const dispatch = useAppDispatch();
-  const category = useAppSelector((state) => selectCategoryById(state, id));
-
-  //console.log(category);
+  const { data, remove, navigateToUpdate } = useDataStore(Category)
+  
+  const category = data.find((cat) => cat.id === id )
 
   return (
     <Screen style={{ paddingTop: 2 }}>
@@ -50,21 +36,13 @@ export default function Categore() {
           <ReButton
             variant="primary"
             label="Edit"
-            onPress={() =>
-              router.push({
-                pathname: "/category/add_category",
-                params: { catId: category?.id },
-              })
-            }
+            onPress={() => navigateToUpdate(category, "category", "add_category", "update")}
           />
           <ReButton
             style={{ marginTop: 20 }}
             variant="primary"
             label="Delete"
-            onPress={() => {
-              dispatch(deleteCategory(category.id));
-              router.back();
-            }}
+            onPress={() => remove(category?.id)}
           />
         </Box>
       </Box>

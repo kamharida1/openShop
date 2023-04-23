@@ -25,17 +25,17 @@ const palette = {
   black: "#0B0B0B",
   white: "#F0F2F3",
   white2: "#FFF",
-  primary: "#990000",
+  primary: "#FF0045",
 
-  lightGray: "#EEE",
+  lightGray: "#2B1B17",
   darkPink: "#FF0058",
 };
 
 export const theme = createTheme({
   colors: {
-    mainBackground: palette.white2,
+    mainBackground: palette.white,
     mainForeground: palette.black,
-    forgroundSubdued: palette.borderOnDark,
+    foregroundSubdued: palette.borderOnDark,
     cardPrimaryBackground: palette.purplePrimary,
     buttonPrimary: palette.purpleLight,
     primary: palette.primary,
@@ -67,7 +67,7 @@ export const theme = createTheme({
         tablet: "m",
       },
       borderWidth: 0.2,
-      borderColor: "forgroundSubdued",
+      borderColor: "foregroundSubdued",
       borderRadius: "m",
       shadowColor: "mainBackground",
       shadowOpacity: 0.2,
@@ -100,7 +100,7 @@ export const theme = createTheme({
       fontWeight: "600",
       fontSize: 28,
       lineHeight: 36,
-      color: "forgroundSubdued",
+      color: "foregroundSubdued",
     },
     body: {
       //fontFamily: "ShopifySans",

@@ -13,14 +13,16 @@ interface ButtonProps {
 const { width, height } = Dimensions.get("window");
 
 const ReButton = ({ variant, label, onPress, style }: ButtonProps) => {
+
   const { colors } = useTheme();
   const backgroundColor =
     variant === "primary" ? colors.primary : colors.buttonBackground;
-  const color = variant === "primary" ? colors.buttonBackground : colors.buttonbackground2;
+  const color =
+    variant === "primary" ? colors.body : colors.mainBackground;
 
   return (
     <RectButton
-      style={[styles.container, style, { backgroundColor }]}
+      style={[styles.container,{ backgroundColor }, style, ]}
       {...{ onPress }}
     >
       <Text variant="button" style={{ color, alignSelf: 'center' }}>

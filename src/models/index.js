@@ -2,6 +2,14 @@
 import { initSchema } from '@aws-amplify/datastore';
 import { schema } from './schema';
 
+const OrderStatus = {
+  "NEW": "NEW",
+  "READY_FOR_PICKUP": "READY_FOR_PICKUP",
+  "PICKED_UP": "PICKED_UP",
+  "COMPLETED": "COMPLETED",
+  "ACCEPTED": "ACCEPTED"
+};
+
 const PurposeEnum = {
   "VARIANT": "VARIANT",
   "FEATURE": "FEATURE",
@@ -9,19 +17,22 @@ const PurposeEnum = {
   "PRODUCT_DETAILS_SELECT": "PRODUCT_DETAILS_SELECT"
 };
 
-const { Address, Order, OrderProduct, User, CartProduct, Brand, OptionValue, OptionType, Prototype, Category, Product } = initSchema(schema);
+const { Order, OrderProduct, Basket, BasketProduct, User, SubCategory, ProductType, Address, Brand, OptionValue, OptionType, Category, Product } = initSchema(schema);
 
 export {
-  Address,
   Order,
   OrderProduct,
+  Basket,
+  BasketProduct,
   User,
-  CartProduct,
+  SubCategory,
+  ProductType,
+  Address,
   Brand,
   OptionValue,
   OptionType,
-  Prototype,
   Category,
   Product,
+  OrderStatus,
   PurposeEnum
 };

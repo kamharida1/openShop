@@ -66,7 +66,7 @@ function AddProductButton() {
           alignItems: "center",
           paddingRight: 8,
         }}
-        onPress={() => router.push("/add_product")}
+        onPress={() => router.push("/product/add_product")}
       >
         <Text variant="body"> Add Product </Text>
         <FontAwesome name="sign-out" size={24} color="black" />
