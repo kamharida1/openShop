@@ -4,25 +4,21 @@ import { ReButton } from "../../../etc/buttons/re_button";
 import { Screen } from "../../../etc/views/screen";
 import { Box, Text } from "../../../etc/_Theme";
 import { useDataStore } from "../../../src/hooks/useDataStoreUpdate";
-import { Category } from "../../../src/models";
+import { SubCategory } from "../../../src/models";
 
-export default function Categore() {
+export default function SubCategore() {
   const { id } = useSearchParams();
 
-  const { data, remove, navigateToUpdate } = useDataStore(Category)
+  const { data, remove, navigateToUpdate } = useDataStore(SubCategory);
   
-  const category = data.find((cat) => cat.id === id )
+  const sub_category = data.find((cat) => cat.id === id )
 
   return (
     <Screen style={{ paddingTop: 2 }}>
-      <Stack.Screen options={{ title: category?.name }} />
+      <Stack.Screen options={{ title: sub_category?.name }} />
       <Box flex={1} m="m">
-        <Image
-          source={{ uri: category?.image }}
-          style={{ width: "100%", height: "50%" }}
-        />
         <Box flex={1} mt="l">
-          <Text style={{ fontSize: 20 }}>{category?.name}</Text>
+          <Text style={{ fontSize: 20 }}>{sub_category?.name}</Text>
           <Text
             style={{
               marginTop: 16,
@@ -31,18 +27,18 @@ export default function Categore() {
               color: "#303035",
             }}
           >
-            {category?.description}
+            {sub_category?.description}
           </Text>
           <ReButton
             variant="primary"
             label="Edit"
-            onPress={() => navigateToUpdate(category, "/category/add_category", "update")}
+            onPress={() => navigateToUpdate(sub_category, "/sub_category/add_sub_category", "update")}
           />
           <ReButton
             style={{ marginTop: 20 }}
             variant="primary"
             label="Delete"
-            onPress={() => remove(category?.id)}
+            onPress={() => remove(sub_category?.id)}
           />
         </Box>
       </Box>

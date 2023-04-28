@@ -14,6 +14,7 @@ import { DataStore } from "aws-amplify";
 import DropdownComponent from "../../../etc/forms/dropdown";
 
 import { StyleSheet } from "react-native";
+import { SubCategory } from "../../../src/models";
 
 const PlaceholderImageSource = "https://picsum.photos/200/300";
 
@@ -32,141 +33,123 @@ export default function AddCategory() {
   const { id, mode } = useSearchParams();
   
   const [name, setName] = useState('');
-  const [description, setDesc] = useState('');
-  const [image, setImage] = useState(null as any);
-  const [productTypeID, setProductTypeID] = useState("");
-  const [category, setCategory] = useState(undefined);
-  const [productTypes, setProductTypes] = useState<ProductType[]>([]);
+  // const [description, setDesc] = useState('');
+  // const [image, setImage] = useState(null as any);
+  // const [productTypeID, setProductTypeID] = useState("");
+  const [categoryID, setCategoryID] = useState("")
+  // const [category, setCategory] = useState(undefined);
+  const [subCategory, setSubCategory] = useState(undefined)
+  // const [productTypes, setProductTypes] = useState<ProductType[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
-  const { data } = useDataStore(ProductType);
+  // const { data } = useDataStore(ProductType);
+  const { data } = useDataStore(Category)
 
   useEffect(() => {
     const options = data.map((option) => ({
       label: option.name,
       value: option.id,
     }));
-    setProductTypes(options);
-  },[data, setProductTypes])
+    setCategories(options);
+  },[data, setCategories])
 
-  const { data: categories, create } = useDataStore(Category);
+  // const { data: categories, create } = useDataStore(Category);
+  const {data: sub_categories, create} = useDataStore(SubCategory)
 
-  console.warn(productTypes);
+  // console.warn(categories);
 
   const router = useRouter();
 
   useEffect(() => {
-    const category = categories.find((cat) => cat.id === id);
-    setCategory(category);
+    // const category = categories.find((cat) => cat.id === id);
+    // setCategory(category);
+    const subCategory = sub_categories.find((subCat) => subCat.id === id);
+    setSubCategory(subCategory);
 
     if (mode !== undefined) {
-      setName(category?.name);
-      setDesc(category?.description)
-      setImage(category?.image)
-      setProductTypeID("")
+      setName(subCategory?.name);
+      setCategoryID("");
     }
-  }, [categories, category]);
+  }, [sub_categories, subCategory]);
 
-  const handleUpdateRecord = async (category) => {
-    const original = await DataStore.query(Category, category.id);
-    const updated = Category.copyOf(original, (updated) => {
+  // const handleUpdateRecord = async (category) => {
+  //   const original = await DataStore.query(Category, category.id);
+  //   const updated = Category.copyOf(original, (updated) => {
+  //     updated.name = name;
+  //     updated.description = description;
+  //     updated.image = image;
+  //     updated.producttypeID = productTypeID;
+  //   });
+  //   await DataStore.save(updated);
+  // };
+  const handleUpdateRecord = async (sub_category) => {
+    const original = await DataStore.query(SubCategory, subCategory.id);
+    const updated = SubCategory.copyOf(original, (updated) => {
       updated.name = name;
-      updated.description = description;
-      updated.image = image;
-      updated.producttypeID = productTypeID;
+      updated.categoryID = categoryID;
     });
     await DataStore.save(updated);
   };
 
-  const handleSaveRecord = (cat) => create(cat);
+  const handleSaveRecord = (subCat) => create(subCat);
 
+  // const saveRecord = async () => {
+  //   const cat = {
+  //     name,
+  //     description,
+  //     image,
+  //     producttypeID: productTypeID
+  //   };
+  //   mode !== undefined
+  //     ? handleUpdateRecord(category)
+  //     : handleSaveRecord(cat);
+  //   setName("");
+  //   setDesc("");
+  //   setImage("");
+  //   setProductTypeID(null as any)
+  //   router.back();
+  // };
   const saveRecord = async () => {
-    const cat = {
+    const subCat = {
       name,
-      description,
-      image,
-      producttypeID: productTypeID
+     categoryID: categoryID
     };
     mode !== undefined
-      ? handleUpdateRecord(category)
-      : handleSaveRecord(cat);
+      ? handleUpdateRecord(subCategory)
+      : handleSaveRecord(subCat);
     setName("");
-    setDesc("");
-    setImage("");
-    setProductTypeID(null as any)
+    setCategoryID(null as any)
     router.back();
   };
 
-  const canSave = Boolean(name) && Boolean(description) && Boolean(productTypeID) && Boolean(image);
+  const canSave = Boolean(name) && Boolean(categoryID) ;
 
-  const productTypeOptions = productTypes.map((productType) => (
-    <Picker.Item
-      key={productType.id}
-      label={productType.name}
-      value={productType.id}
-    />
-  ));
+  // const productTypeOptions = productTypes.map((productType) => (
+  //   <Picker.Item
+  //     key={productType.id}
+  //     label={productType.name}
+  //     value={productType.id}
+  //   />
+  // ));
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    } else {
-      alert("You did not select any image.");
-    }
-  };
 
   return (
     <Screen>
       <Box flex={1} marginHorizontal="m" mb="xl">
         <Box mb="l">
           <TextInput
-            placeholder="Enter category"
+            placeholder="Enter sub category"
             value={name}
             onChangeText={setName}
           />
         </Box>
         <Box mb="l">
-          <TextInput
-            placeholder="Enter description"
-            value={description}
-            onChangeText={setDesc}
-          />
-        </Box>
-        <Box mb="l">
           <DropdownComponent
-            value={productTypeID}
+            value={categoryID}
             isFocus={isFocus}
             setIsFocus={setIsFocus}
-            setValue={setProductTypeID}
-            data={productTypes}
-          />
-        </Box>
-        <Box mt="xl" mb="l" justifyContent="space-around">
-          {/* <ReButtonBButt onPress={pickImage} label={"Pick an Image"} /> */}
-          <Button
-            onPress={pickImage}
-            textStyle={{
-              color: "#222",
-              fontWeight: "500",
-              textShadowColor: "#000077",
-              textShadowRadius: 0.4,
-              textShadowOffset: { width: 0.5, height: 0.2 },
-            }}
-          >
-            Pick an Image
-          </Button>
-          <Image
-            source={{ uri: image ?? PlaceholderImageSource }}
-            style={{
-              alignSelf: "center",
-              width: 80,
-              height: 80,
-              marginBottom: 16,
-            }}
+            setValue={setCategoryID}
+            data={categories}
           />
         </Box>
         {/* <ReButton

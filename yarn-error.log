@@ -1,8 +1,8 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/bin/yarn add @aws-amplify/datastore-storage-adapter/ExpoSQLiteAdapter
+  /usr/local/bin/node /usr/local/bin/yarn add -D @types/react-native-picker-select
 
 PATH: 
-  /Users/macintoshhd/.amplify/bin:/usr/local/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/macintoshhd/.amplify/bin
+  /Users/macintoshhd/.amplify/bin:/usr/local/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/macintoshhd/.amplify/bin
 
 Yarn version: 
   1.22.19
@@ -14,8 +14,8 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@aws-amplify%2fdatastore-storage-adapter/ExpoSQLiteAdapter: Request "https://registry.yarnpkg.com/@aws-amplify%2fdatastore-storage-adapter/ExpoSQLiteAdapter" returned a 405
-      at params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:66154:18)
+  Error: https://registry.yarnpkg.com/@types%2freact-native-picker-select: Not found
+      at params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:66145:18)
       at self.callback (/usr/local/lib/node_modules/yarn/lib/cli.js:140890:22)
       at Request.emit (node:events:513:28)
       at Request.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141862:10)
@@ -44,10 +44,14 @@ npm manifest:
           "metro-resolver": "0.73.0"
       },
       "dependencies": {
+          "@aws-amplify/datastore-storage-adapter": "^2.0.28",
           "@azure/core-asynciterator-polyfill": "^1.0.2",
           "@bacons/react-views": "^1.1.3",
+          "@react-native-async-storage/async-storage": "1.17.11",
+          "@react-native-community/netinfo": "9.3.7",
           "@react-native-picker/picker": "2.4.8",
           "@reduxjs/toolkit": "^1.9.5",
+          "@shopify/restyle": "^2.4.2",
           "aws-amplify": "^5.1.2",
           "expo": "~48.0.11",
           "expo-constants": "~14.2.1",
@@ -179,6 +183,11 @@ Lockfile:
       tslib "^1.8.0"
       universal-cookie "^4.0.4"
       zen-observable-ts "0.8.19"
+  
+  "@aws-amplify/datastore-storage-adapter@^2.0.28":
+    version "2.0.28"
+    resolved "https://registry.yarnpkg.com/@aws-amplify/datastore-storage-adapter/-/datastore-storage-adapter-2.0.28.tgz#898e5c2f54d7c0d6790e1d5bade26af6da194955"
+    integrity sha512-Ka5nmN3SSpQGJ9nXWrW5Z8BfVfU34L/OHItmvyUPjhuZHJ5WR0U7hCYuV/tdtV0s1xJN5fYVg+sb0y9FzXyY+A==
   
   "@aws-amplify/datastore@4.1.10":
     version "4.1.10"
@@ -3833,6 +3842,13 @@ Lockfile:
       "@babel/runtime" "^7.13.10"
       "@radix-ui/react-compose-refs" "1.0.0"
   
+  "@react-native-async-storage/async-storage@1.17.11":
+    version "1.17.11"
+    resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.17.11.tgz#7ec329c1b9f610e344602e806b04d7c928a2341d"
+    integrity sha512-bzs45n5HNcDq6mxXnSsOHysZWn1SbbebNxldBXCQs8dSvF8Aor9KCdpm+TpnnGweK3R6diqsT8lFhX77VX0NFw==
+    dependencies:
+      merge-options "^3.0.4"
+  
   "@react-native-community/cli-clean@^10.1.1":
     version "10.1.1"
     resolved "https://registry.npmjs.org/@react-native-community/cli-clean/-/cli-clean-10.1.1.tgz"
@@ -3995,6 +4011,11 @@ Lockfile:
       prompts "^2.4.0"
       semver "^6.3.0"
   
+  "@react-native-community/netinfo@9.3.7":
+    version "9.3.7"
+    resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-9.3.7.tgz#92407f679f00bae005c785a9284e61d63e292b34"
+    integrity sha512-+taWmE5WpBp0uS6kf+bouCx/sn89G9EpR4s2M/ReLvctVIFL2Qh8WnWfBxqK9qwgmFha/uqjSr2Gq03OOtiDcw==
+  
   "@react-native-picker/picker@2.4.8":
     version "2.4.8"
     resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-2.4.8.tgz#a1a21f3d6ecadedbc3f0b691a444ddd7baa081f8"
@@ -4102,6 +4123,11 @@ Lockfile:
     dependencies:
       component-type "^1.2.1"
       join-component "^1.1.0"
+  
+  "@shopify/restyle@^2.4.2":
+    version "2.4.2"
+    resolved "https://registry.yarnpkg.com/@shopify/restyle/-/restyle-2.4.2.tgz#bffb5cec619d6ea61e1fab1ec40dec9482946460"
+    integrity sha512-r01j9bbXkhZZkGkLnE6jsJvSCkcjwXBySfe8bQCB7duEfQn36mU6WumNc2pndzXpZhPSevppyXzFZ2jY3XUakw==
   
   "@sideway/address@^4.1.3":
     version "4.1.4"
@@ -6597,6 +6623,11 @@ Lockfile:
     resolved "https://registry.npmjs.org/is-path-inside/-/is-path-inside-3.0.3.tgz"
     integrity sha512-Fd4gABb+ycGAmKou8eMftCupSir5lRxqf4aD/vd0cD2qc4HL07OjCeuHMr8Ro4CoMaeCKDB0/ECBOVWjTwUvPQ==
   
+  is-plain-obj@^2.1.0:
+    version "2.1.0"
+    resolved "https://registry.yarnpkg.com/is-plain-obj/-/is-plain-obj-2.1.0.tgz#45e42e37fccf1f40da8e5f76ee21515840c09287"
+    integrity sha512-YWnfyRwxL/+SsrWYfOpUtz5b3YD+nyfkHvjbcanzk8zgyO4ASD67uVMRt8k5bM4lLMDnXfriRhOpemw+NfT1eA==
+  
   is-plain-object@^2.0.3, is-plain-object@^2.0.4:
     version "2.0.4"
     resolved "https://registry.npmjs.org/is-plain-object/-/is-plain-object-2.0.4.tgz"
@@ -7129,6 +7160,13 @@ Lockfile:
     version "0.2.0"
     resolved "https://registry.npmjs.org/memory-cache/-/memory-cache-0.2.0.tgz"
     integrity sha512-OcjA+jzjOYzKmKS6IQVALHLVz+rNTMPoJvCztFaZxwG14wtAW7VRZjwTQu06vKCYOxh4jVnik7ya0SXTB0W+xA==
+  
+  merge-options@^3.0.4:
+    version "3.0.4"
+    resolved "https://registry.yarnpkg.com/merge-options/-/merge-options-3.0.4.tgz#84709c2aa2a4b24c1981f66c179fe5565cc6dbb7"
+    integrity sha512-2Sug1+knBjkaMsMgf1ctR1Ujx+Ayku4EdJN4Z+C2+JzoeF7A3OZ9KM2GY0CpQS51NR61LTurMJrRKPhSs3ZRTQ==
+    dependencies:
+      is-plain-obj "^2.1.0"
   
   merge-stream@^2.0.0:
     version "2.0.0"

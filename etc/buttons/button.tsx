@@ -1,11 +1,12 @@
 import { Pressable, Text, View } from "@bacons/react-views";
+import {TextStyle, ViewStyle} from 'react-native'
 
 interface ButtonT {
   children: string;
   onPress: () => void;
   style?: any;
-  buttonStyle?: any;
-  textStyle?: any;
+  buttonStyle?: ViewStyle;
+  textStyle?: TextStyle;
 }
 
 export const Button =({

@@ -1,47 +1,48 @@
 import { Stack, useSearchParams } from "expo-router";
-import { FlatList, TouchableOpacity } from "react-native";
+import { FlatList } from "react-native";
 import { useMemo } from "react";
-import { Category } from "../../../src/models";
+import { Brand } from "../../../src/models";
 import { useDataStore } from "../../../src/hooks/useDataStoreUpdate";
+import { StyleSheet, Text, View } from "@bacons/react-views";
 import ItemCard from "../../../etc/cards/item_card";
-import { View } from "@bacons/react-views";
 
-export default function Categories() {
+export default function Brands() {
   
-  const categories = useQueriedCategories();
-  const {  navigateToUpdate } = useDataStore(Category);
+  const brands = useQueriedBrands();
+  const {  navigateToUpdate } = useDataStore(Brand);
 
-  function useQueriedCategories() {
-    const { data: categories } = useDataStore(Category);
+  function useQueriedBrands() {
+    // const categories = useAppSelector(selectAllCategories);
+    const { data: brands } = useDataStore(Brand);
 
     const { q } = useSearchParams<{ q: string }>();
 
     return useMemo(
       () =>
-        categories.filter((item) => {
+        brands.filter((item) => {
           if (!q) {
             return true;
           }
           return item.name.toLowerCase().includes(q?.toLowerCase());
         }),
-      [q, categories]
+      [q, brands]
     );
   }
 
   return (
     <View style={{ flex: 1 }}>
       <Stack.Screen
-        options={{ title: ` Categories (${categories.length})` }}
+        options={{ title: ` Brands (${brands.length})` }}
       />
 
       <FlatList
         contentInsetAdjustmentBehavior="automatic"
         scrollEventThrottle={16}
-        data={categories}
+        data={brands}
         renderItem={({ item }) => (
           <ItemCard
             obj={item}
-            onPress={() => navigateToUpdate(item, "/category/[id]", "")}
+            onPress={() => navigateToUpdate(item, "/brand/[id]", "")}
           />
         )}
         scrollEnabled
@@ -59,4 +60,3 @@ export default function Categories() {
     </View>
   );
 }
-

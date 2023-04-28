@@ -1,47 +1,46 @@
 import { Stack, useSearchParams } from "expo-router";
 import { FlatList, TouchableOpacity } from "react-native";
 import { useMemo } from "react";
-import { Category } from "../../../src/models";
+import { Category, SubCategory } from "../../../src/models";
 import { useDataStore } from "../../../src/hooks/useDataStoreUpdate";
 import ItemCard from "../../../etc/cards/item_card";
 import { View } from "@bacons/react-views";
 
-export default function Categories() {
+export default function SubCategories() {
   
-  const categories = useQueriedCategories();
+  // const categories = useQueriedCategories();
+  const sub_categories = useQueriedSubCategories()
   const {  navigateToUpdate } = useDataStore(Category);
 
-  function useQueriedCategories() {
-    const { data: categories } = useDataStore(Category);
+  function useQueriedSubCategories() {
+    const { data: sub_categories } = useDataStore(SubCategory);
 
     const { q } = useSearchParams<{ q: string }>();
 
     return useMemo(
       () =>
-        categories.filter((item) => {
+        sub_categories.filter((item) => {
           if (!q) {
             return true;
           }
           return item.name.toLowerCase().includes(q?.toLowerCase());
         }),
-      [q, categories]
+      [q, sub_categories]
     );
   }
 
   return (
     <View style={{ flex: 1 }}>
-      <Stack.Screen
-        options={{ title: ` Categories (${categories.length})` }}
-      />
+      <Stack.Screen options={{ title: ` Sub Categories (${sub_categories.length})` }} />
 
       <FlatList
         contentInsetAdjustmentBehavior="automatic"
         scrollEventThrottle={16}
-        data={categories}
+        data={sub_categories}
         renderItem={({ item }) => (
           <ItemCard
             obj={item}
-            onPress={() => navigateToUpdate(item, "/category/[id]", "")}
+            onPress={() => navigateToUpdate(item, "/sub_category/[id]", "")}
           />
         )}
         scrollEnabled
@@ -49,11 +48,11 @@ export default function Categories() {
         stickyHeaderIndices={[0]}
         stickyHeaderHiddenOnScroll
         contentContainerStyle={{
-          flex: 1,
           marginTop: 14,
           marginHorizontal: 16,
           backgroundColor: "fff",
           borderRadius: 10,
+          paddingBottom: 60,
         }}
       />
     </View>

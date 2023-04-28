@@ -4,19 +4,19 @@ import { Box, Text } from "../../../etc/_Theme";
 import { FontAwesome } from "@expo/vector-icons";
 
 export const unstable_settings = {
-  initialRouteName: "products",
+  initialRouteName: "option_types",
 };
 
-export default function CategoryLayout() {
+export default function OptionTypeLayout() {
   const router = useRouter();
 
   return (
     <Stack screenOptions={{}}>
       <Stack.Screen
-        name="categories"
+        name="option_types"
         options={{
           headerLargeTitle: true,
-          headerRight: AddCategoryButton,
+          headerRight: AddOptionTypeButton,
           headerSearchBarOptions: {
             onChangeText: (event) => {
               // Update the query params to match the search query.
@@ -28,9 +28,9 @@ export default function CategoryLayout() {
         }}
       />
       <Stack.Screen
-        name="add_category"
+        name="add_option_type"
         options={{
-          title: "Add Category",
+          title: "Add Option Type",
           presentation: "modal",
           headerRight: Platform.select({
             ios: DismissComposeButton,
@@ -42,7 +42,7 @@ export default function CategoryLayout() {
   );
 }
 
-function AddCategoryButton() {
+function AddOptionTypeButton() {
   const router = useRouter();
   return (
     <Pressable
@@ -52,9 +52,9 @@ function AddCategoryButton() {
         alignItems: "center",
         paddingRight: 8,
       }}
-      onPress={() => router.push("/category/add_category")}
+      onPress={() => router.push("/option_type/add_option_type")}
     >
-      <Text style={{ fontSize: 14}}> Add Category </Text>
+      <Text style={{ fontSize: 14 }}> Add Option Type </Text>
       <FontAwesome name="sign-out" size={24} color="black" />
     </Pressable>
   );

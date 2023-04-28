@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import "@azure/core-asynciterator-polyfill";
 import { LinkButton } from "../../etc/buttons/link_button";
 import { DataStore } from "aws-amplify";
@@ -6,12 +6,14 @@ import { ExpoSQLiteAdapter } from "@aws-amplify/datastore-storage-adapter/ExpoSQ
 import Toast from "react-native-root-toast";
 import { ReButton } from "../../etc/buttons/re_button";
 import { Screen } from "../../etc/views/screen";
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 
 DataStore.configure({
   storageAdapter: ExpoSQLiteAdapter,
 });
 
 export default function Page() {
+  const circleSize = useSharedValue(100);
 
   async function clearDataStore() {
     await DataStore.clear();
@@ -24,9 +26,36 @@ export default function Page() {
       delay: 0,
     });
   }
+
+  function onPress() {
+    circleSize.value = withSpring(
+      Math.floor(Math.random() * (350 - 100 + 1)) + 100,
+      {
+        damping: 5,
+        stiffness: 80,
+      }
+    );
+  }
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return { width: circleSize.value, height: circleSize.value}
+  })
   return (
     <Screen scroll style={styles.container}>
       <View style={styles.main}>
+        <Pressable onPress={onPress}>
+          <Animated.View
+            style={[
+              {
+                alignSelf: "center",
+                marginVertical: 6,
+                backgroundColor: "blue",
+                borderRadius: 50,
+              },
+              animatedStyle,
+            ]}
+          />
+        </Pressable>
         <Text style={styles.title}>Hello World</Text>
         <Text style={styles.subtitle}>This is the first page of your app.</Text>
         <LinkButton
@@ -48,13 +77,13 @@ export default function Page() {
           Brands
         </LinkButton>
         <LinkButton
-          link="sub/subs"
+          link="sub_category/sub_categories"
           style={{ alignSelf: "center", marginTop: 16, width: 300 }}
         >
           Sub Categories
         </LinkButton>
         <LinkButton
-          link="option_type/optionTypes"
+          link="option_type/option_types"
           style={{ alignSelf: "center", marginTop: 16, width: 300 }}
         >
           Option Types
@@ -109,7 +138,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   subtitle: {
-    fontSize: 36,
+    fontSize: 20,
     color: "#38434D",
   },
 });

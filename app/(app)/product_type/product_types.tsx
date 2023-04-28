@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { ProductType } from "../../../src/models";
 import { useDataStore } from "../../../src/hooks/useDataStoreUpdate";
 import { StyleSheet, Text, View } from "@bacons/react-views";
+import ItemCard from "../../../etc/cards/item_card";
 
 export default function ProductTypes() {
   
@@ -11,7 +12,6 @@ export default function ProductTypes() {
   const {  navigateToUpdate } = useDataStore(ProductType);
 
   function useQueriedProductTypes() {
-    // const categories = useAppSelector(selectAllCategories);
     const { data: product_types } = useDataStore(ProductType);
 
     const { q } = useSearchParams<{ q: string }>();
@@ -34,10 +34,12 @@ export default function ProductTypes() {
       scrollEventThrottle={16}
       data={product_types}
       renderItem={({ item }) => (
-          <TouchableOpacity style={styles.container} onPress={() => navigateToUpdate(item, "/product_type/[id]", "")}>
-            <Text>{item.name}</Text>
-          </TouchableOpacity>
+        <ItemCard
+          obj={item}
+          onPress={() => navigateToUpdate(item, "/product_type/[id]", "")}
+        />
       )}
+      scrollEnabled
       onEndReachedThreshold={0.5}
       stickyHeaderIndices={[0]}
       stickyHeaderHiddenOnScroll

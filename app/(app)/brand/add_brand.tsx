@@ -1,6 +1,6 @@
 import { useRouter, useSearchParams } from "expo-router";
 import { useDataStore } from "../../../src/hooks/useDataStoreUpdate";
-import { ProductType } from "../../../src/models";
+import { Brand, ProductType } from "../../../src/models";
 import { useEffect, useState } from "react";
 import { Screen } from "../../../etc/views/screen";
 import { Box } from "../../../etc/_Theme";
@@ -9,42 +9,42 @@ import { ReButton } from "../../../etc/buttons/re_button";
 import { DataStore } from "aws-amplify";
 
 
-export default function AddProductType() {
+export default function AddBrand() {
 
   const { id, mode } = useSearchParams();
 
-  const { data, update, create } = useDataStore(ProductType);
+  const { data, update, create } = useDataStore(Brand);
 
   const [name, setName] = useState('');
 
-  const [product_type, setProductType] = useState(undefined)
+  const [brand, setBrand] = useState(undefined)
 
   const router = useRouter()
 
   useEffect(() => {
-    const product_type = data.find((prod) => prod.id === id);
-    setProductType(product_type);
+    const brand = data.find((brand) => brand.id === id);
+    setBrand(brand);
 
     if (mode !== undefined) {
-      setName(product_type?.name);
+      setName(brand?.name);
     }
-  }, [data, product_type]);
+  }, [data, brand]);
 
-  const handleUpdateRecord = async (product_type) => {
-    const original = await DataStore.query(ProductType, product_type.id);
-    const updated = ProductType.copyOf(original, (updated) => {
+  const handleUpdateRecord = async (brand) => {
+    const original = await DataStore.query(brand, brand.id);
+    const updated = brand.copyOf(original, (updated) => {
       updated.name = name;
     });
     await DataStore.save(updated);
    };
 
-  const handleSaveRecord = (product) => create(product);
+  const handleSaveRecord = (brand) => create(brand);
 
   const saveRecord = async () => {
-    const product = {
+    const brandy = {
       name,
     };
-    mode !== undefined ? handleUpdateRecord(product_type) : handleSaveRecord(product);
+    mode !== undefined ? handleUpdateRecord(brand) : handleSaveRecord(brandy);
     setName("");
     router.back()
   }
@@ -54,12 +54,12 @@ export default function AddProductType() {
       <Box flex={1} marginHorizontal="m" mb="xl">
         <Box mb="l">
           <TextInput
-            placeholder="Enter product type"
+            placeholder="Enter brand"
             value={name}
             onChangeText={setName}
           />
         </Box>
-        <ReButton onPress={() => saveRecord(product_type)} label={mode === "update" ? 'Update' : 'Create'} variant="primary" />
+        <ReButton onPress={() => saveRecord(brand)} label={mode === "update" ? 'Update' : 'Create'} variant="primary" />
       </Box>
     </Screen>
   );

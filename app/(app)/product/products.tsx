@@ -40,6 +40,7 @@ export default function ProductGrid() {
       contentInsetAdjustmentBehavior="automatic"
       scrollEventThrottle={16}
       data={products}
+      scrollEnabled
       renderItem={({ item }) => <ProductItem item={item} />}
       keyExtractor={(item) => item.name}
       numColumns={2}

@@ -1,47 +1,47 @@
 import { Stack, useSearchParams } from "expo-router";
 import { FlatList, TouchableOpacity } from "react-native";
 import { useMemo } from "react";
-import { Category } from "../../../src/models";
+import { OptionType } from "../../../src/models";
 import { useDataStore } from "../../../src/hooks/useDataStoreUpdate";
 import ItemCard from "../../../etc/cards/item_card";
 import { View } from "@bacons/react-views";
 
-export default function Categories() {
+export default function OptionTypes() {
   
-  const categories = useQueriedCategories();
-  const {  navigateToUpdate } = useDataStore(Category);
+  const option_types = useQueriedOptionTypes();
+  const {  navigateToUpdate } = useDataStore(OptionType);
 
-  function useQueriedCategories() {
-    const { data: categories } = useDataStore(Category);
+  function useQueriedOptionTypes() {
+    const { data: option_types } = useDataStore(OptionType);
 
     const { q } = useSearchParams<{ q: string }>();
 
     return useMemo(
       () =>
-        categories.filter((item) => {
+        option_types.filter((item) => {
           if (!q) {
             return true;
           }
           return item.name.toLowerCase().includes(q?.toLowerCase());
         }),
-      [q, categories]
+      [q, option_types]
     );
   }
 
   return (
     <View style={{ flex: 1 }}>
       <Stack.Screen
-        options={{ title: ` Categories (${categories.length})` }}
+        options={{ title: ` Option Types (${option_types.length})` }}
       />
 
       <FlatList
         contentInsetAdjustmentBehavior="automatic"
         scrollEventThrottle={16}
-        data={categories}
+        data={option_types}
         renderItem={({ item }) => (
           <ItemCard
             obj={item}
-            onPress={() => navigateToUpdate(item, "/category/[id]", "")}
+            onPress={() => navigateToUpdate(item, "/option_type/[id]", "")}
           />
         )}
         scrollEnabled
