@@ -3,9 +3,6 @@ import { Platform, Pressable } from "react-native";
 import { Box, Text } from "../../../etc/_Theme";
 import { FontAwesome } from "@expo/vector-icons";
 
-export const unstable_settings = {
-  initialRouteName: "option_types",
-};
 
 export default function OptionTypeLayout() {
   const router = useRouter();

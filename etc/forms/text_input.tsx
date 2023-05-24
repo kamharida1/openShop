@@ -32,7 +32,7 @@ const TextInput = forwardRef<RNTextInput, TextInputProps>(
   ) => {
     const theme = useTheme();
     const SIZE = theme.borderRadii.m * 2; // 10 x 2 = 20
-    const color = !touched ? "body" : error ? "danger" : "primary";
+    const color = !touched ? "body" : error ? "danger" : "success";
     const themeColor = theme.colors[color];
 
     return (
@@ -60,7 +60,7 @@ const TextInput = forwardRef<RNTextInput, TextInputProps>(
           <RoundIcon
             name={!error ? "check" : "x"}
             size={SIZE}
-            backgroundColor={!error ? "primary" : "danger"}
+            backgroundColor={!error ? "success" : "danger"}
             color="mainBackground"
           />
         )}
@@ -68,7 +68,7 @@ const TextInput = forwardRef<RNTextInput, TextInputProps>(
           <RoundIcon
             name={!hidePassword ? "eye" : "eye-off"}
             size={SIZE}
-            backgroundColor={!hidePassword ? "primary" : "buttonPrimary"}
+            backgroundColor={!hidePassword ? "success" : "buttonPrimary"}
             color="mainBackground"
           />
         )}

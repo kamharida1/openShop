@@ -1,18 +1,31 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Button, Pressable, StyleSheet, Text, View } from "react-native";
 import "@azure/core-asynciterator-polyfill";
-import { LinkButton } from "../../etc/buttons/link_button";
+import { LinkButton } from "../etc/buttons/link_button";
 import { DataStore } from "aws-amplify";
 import { ExpoSQLiteAdapter } from "@aws-amplify/datastore-storage-adapter/ExpoSQLiteAdapter";
 import Toast from "react-native-root-toast";
-import { ReButton } from "../../etc/buttons/re_button";
-import { Screen } from "../../etc/views/screen";
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
+import { ReButton } from "../etc/buttons/re_button";
+import { Screen } from "../etc/views/screen";
+import { useAuthenticator, withAuthenticator } from "@aws-amplify/ui-react-native";
+
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 
 DataStore.configure({
   storageAdapter: ExpoSQLiteAdapter,
 });
 
-export default function Page() {
+function SignOutButton() {
+  const { signOut } = useAuthenticator();
+  return <Button title="Sign Out" onPress={signOut} />;
+}
+
+function Page() {
   const circleSize = useSharedValue(100);
 
   async function clearDataStore() {
@@ -38,8 +51,9 @@ export default function Page() {
   }
 
   const animatedStyle = useAnimatedStyle(() => {
-    return { width: circleSize.value, height: circleSize.value}
-  })
+    return { width: circleSize.value, height: circleSize.value };
+  });
+
   return (
     <Screen scroll style={styles.container}>
       <View style={styles.main}>
@@ -59,43 +73,49 @@ export default function Page() {
         <Text style={styles.title}>Hello World</Text>
         <Text style={styles.subtitle}>This is the first page of your app.</Text>
         <LinkButton
-          link="category/categories"
+          link="(app)/category/categories"
           style={{ alignSelf: "center", marginTop: 16, width: 300 }}
         >
           Categories
         </LinkButton>
         <LinkButton
-          link="product/products"
+          link="(app)/prototype/prototypes"
+          style={{ alignSelf: "center", marginTop: 16, width: 300 }}
+        >
+          Prototypes
+        </LinkButton>
+        <LinkButton
+          link="(app)/product/products"
           style={{ alignSelf: "center", marginTop: 16, width: 300 }}
         >
           Products
         </LinkButton>
         <LinkButton
-          link="brand/brands"
+          link="(app)/brand/brands"
           style={{ alignSelf: "center", marginTop: 16, width: 300 }}
         >
           Brands
         </LinkButton>
         <LinkButton
-          link="sub_category/sub_categories"
+          link="(app)/sub_category/sub_categories"
           style={{ alignSelf: "center", marginTop: 16, width: 300 }}
         >
           Sub Categories
         </LinkButton>
         <LinkButton
-          link="option_type/option_types"
+          link="(app)/option_type/option_types"
           style={{ alignSelf: "center", marginTop: 16, width: 300 }}
         >
           Option Types
         </LinkButton>
         <LinkButton
-          link="option_value/optionValues"
+          link="(app)/option_value/option_values"
           style={{ alignSelf: "center", marginTop: 16, width: 300 }}
         >
           Option Values
         </LinkButton>
         <LinkButton
-          link="product_type/product_types"
+          link="(app)/product_type/product_types"
           style={{ alignSelf: "center", marginTop: 16, width: 300 }}
         >
           ProductTypes
@@ -114,10 +134,13 @@ export default function Page() {
             width: 300,
           }}
         />
+        <SignOutButton />
       </View>
     </Screen>
   );
 }
+
+export default withAuthenticator(Page)
 
 const styles = StyleSheet.create({
   container: {
@@ -131,7 +154,7 @@ const styles = StyleSheet.create({
     maxWidth: 960,
     marginHorizontal: "auto",
     paddingTop: 40,
-    paddingHorizontal: 6
+    paddingHorizontal: 6,
   },
   title: {
     fontSize: 64,

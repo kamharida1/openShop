@@ -3,10 +3,6 @@ import { Platform, Pressable } from "react-native";
 import {  Text } from "../../../etc/_Theme";
 import { FontAwesome } from "@expo/vector-icons";
 
-export const unstable_settings = {
-  initialRouteName: "brands",
-};
-
 export default function BrandLayout() {
   const router = useRouter();
 

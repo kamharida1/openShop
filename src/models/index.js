@@ -17,22 +17,30 @@ const PurposeEnum = {
   "PRODUCT_DETAILS_SELECT": "PRODUCT_DETAILS_SELECT"
 };
 
-const { Order, OrderProduct, Basket, BasketProduct, User, SubCategory, ProductType, Address, Brand, OptionValue, OptionType, Category, Product } = initSchema(schema);
+const { OrderProduct, Order, CartItem, Cart, PaymentMethod, ShippingAddress, BillingAddress, Location, ShippingRate, ShippingClass, Prototype, User, SubCategory, ProductType, Brand, OptionValue, OptionType, Category, Product, SubCategoryOptionType, DetailsJson } = initSchema(schema);
 
 export {
-  Order,
   OrderProduct,
-  Basket,
-  BasketProduct,
+  Order,
+  CartItem,
+  Cart,
+  PaymentMethod,
+  ShippingAddress,
+  BillingAddress,
+  Location,
+  ShippingRate,
+  ShippingClass,
+  Prototype,
   User,
   SubCategory,
   ProductType,
-  Address,
   Brand,
   OptionValue,
   OptionType,
   Category,
   Product,
+  SubCategoryOptionType,
   OrderStatus,
-  PurposeEnum
+  PurposeEnum,
+  DetailsJson
 };

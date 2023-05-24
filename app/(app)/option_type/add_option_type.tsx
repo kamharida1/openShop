@@ -1,6 +1,6 @@
 import { useRouter, useSearchParams } from "expo-router";
 import { useDataStore } from "../../../src/hooks/useDataStoreUpdate";
-import { PurposeEnum, OptionType, SubCategory } from "../../../src/models";
+import { PurposeEnum, OptionType} from "../../../src/models";
 import * as ImagePicker from "expo-image-picker";
 import { useEffect, useState } from "react";
 import { Screen } from "../../../etc/views/screen";
@@ -33,25 +33,11 @@ export default function AddOptionType() {
   const { id, mode } = useSearchParams();
   
   const [name, setName] = useState('');
-  // const [description, setDesc] = useState('');
-  // const [image, setImage] = useState(null as any);
-  // const [productTypeID, setProductTypeID] = useState("");
-  // const [category, setCategory] = useState(undefined);
+  const [placeholder, setPlaceholder] = useState('')
+  const [value, setValue] = useState("")
   const [optionType, setOptionType] = useState()
-  const [SubCategoryID, setSubCategoryID] = useState("")
-  const [subCategories, setSubCategories] = useState([])
-  const [selectedPurpose, setSelectedPurpose] = useState("")
+  const [selectedPurpose, setSelectedPurpose] = useState(PurposeEnum.FEATURE)
   const [purposeEnums, setPurposeEnums] = useState([])
-
-  const { data } = useDataStore(SubCategory);
-
-  useEffect(() => {
-    const options = data.map((option) => ({
-      label: option.name,
-      value: option.id,
-    }));
-    setSubCategories(options);
-  }, [data, setSubCategories])
   
   useEffect(() => {
     const purposeEnums = Object.values(PurposeEnum)
@@ -64,7 +50,7 @@ export default function AddOptionType() {
 
   const { data: optionTypes, create } = useDataStore(OptionType);
 
-  console.warn(purposeEnums);
+  // console.warn(purposeEnums);
 
   const router = useRouter();
 
@@ -74,9 +60,7 @@ export default function AddOptionType() {
 
     if (mode !== undefined) {
       setName(optionType?.name);
-      // setDesc(category?.description)
-      // setImage(category?.image)
-      // setProductTypeID("")
+      setPlaceholder(optionType?.placeholder)
     }
   }, [optionTypes, optionType]);
 
@@ -84,9 +68,9 @@ export default function AddOptionType() {
     const original = await DataStore.query(OptionType, optionType.id);
     const updated = OptionType.copyOf(original, (updated) => {
       updated.name = name;
-      // updated.description = description;
-      // updated.image = image;
-      // updated.producttypeID = productTypeID;
+      updated.placeholder = placeholder;
+      updated.category = selectedPurpose;
+      updated.value = value;
     });
     await DataStore.save(updated);
   };
@@ -96,15 +80,17 @@ export default function AddOptionType() {
   const saveRecord = async () => {
     const opt = {
       name,
-      // description,
-      // image,
-      // producttypeID: productTypeID
+      placeholder,
+      value,
+      category: selectedPurpose,
     };
     mode !== undefined
       ? handleUpdateRecord(optionType)
       : handleSaveRecord(opt);
     setName("");
-    // setDesc("");
+    setPlaceholder("");
+    setValue("");
+    setSelectedPurpose(PurposeEnum.FEATURE)
     // setImage("");
     // setProductTypeID(null as any)
     router.back();
@@ -115,23 +101,21 @@ export default function AddOptionType() {
   return (
     <Screen>
       <Box flex={1} marginHorizontal="m" mb="xl">
-        <Box mb="l">
+        <Box mb="s">
           <TextInput
-            placeholder="Enter category"
+            placeholder="Enter name"
             value={name}
             onChangeText={setName}
           />
         </Box>
-        <Box mb="l">
-          <DropdownComponent
-            value={SubCategoryID}
-            isFocus={isFocus}
-            setIsFocus={setIsFocus}
-            setValue={setSubCategoryID}
-            data={subCategories}
+        <Box mb="s">
+          <TextInput
+            placeholder="Enter placeholder"
+            value={placeholder}
+            onChangeText={setPlaceholder}
           />
         </Box>
-        <Box mb="l">
+        <Box mb="s">
           <DropdownComponent
             value={selectedPurpose}
             isFocus={isFocusOpt}

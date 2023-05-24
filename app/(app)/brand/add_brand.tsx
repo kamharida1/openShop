@@ -7,6 +7,7 @@ import { Box } from "../../../etc/_Theme";
 import TextInput from "../../../etc/forms/text_input";
 import { ReButton } from "../../../etc/buttons/re_button";
 import { DataStore } from "aws-amplify";
+import AnimatedInput from "../../../etc/forms/animated_input";
 
 
 export default function AddBrand() {
@@ -53,11 +54,12 @@ export default function AddBrand() {
     <Screen>
       <Box flex={1} marginHorizontal="m" mb="xl">
         <Box mb="l">
-          <TextInput
+          {/* <TextInput
             placeholder="Enter brand"
             value={name}
             onChangeText={setName}
-          />
+          /> */}
+          <AnimatedInput />
         </Box>
         <ReButton onPress={() => saveRecord(brand)} label={mode === "update" ? 'Update' : 'Create'} variant="primary" />
       </Box>

@@ -1,10 +1,11 @@
 import { useSearchParams } from "expo-router";
-import { FlatList, TouchableOpacity } from "react-native";
+import { Button, FlatList, TouchableOpacity } from "react-native";
 import { useMemo } from "react";
 import { ProductType } from "../../../src/models";
 import { useDataStore } from "../../../src/hooks/useDataStoreUpdate";
 import { StyleSheet, Text, View } from "@bacons/react-views";
 import ItemCard from "../../../etc/cards/item_card";
+import { DataStore } from "aws-amplify";
 
 export default function ProductTypes() {
   
@@ -27,6 +28,19 @@ export default function ProductTypes() {
       [q, product_types]
     );
   }
+
+  const load = async () => {
+    product_types.map((item) => {
+      DataStore.save(
+        new ProductType({
+          name: item.name,
+          
+        })
+      );
+    });
+
+    await Promise.all(product_types);
+  };
 
   return (
     <FlatList

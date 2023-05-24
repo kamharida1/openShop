@@ -3,9 +3,6 @@ import { Platform, Pressable } from "react-native";
 import { Box, Text } from "../../../etc/_Theme";
 import { FontAwesome } from "@expo/vector-icons";
 
-export const unstable_settings = {
-  initialRouteName: "sub_categories",
-};
 
 export default function SubCategoryLayout() {
   const router = useRouter();
@@ -31,6 +28,16 @@ export default function SubCategoryLayout() {
         name="add_sub_category"
         options={{
           title: "Add Sub Category",
+          presentation: "modal",
+          headerRight: Platform.select({
+            ios: DismissComposeButton,
+          }),
+        }}
+      />
+      <Stack.Screen
+        name="add_sub_option"
+        options={{
+          title: "Add Sub Option",
           presentation: "modal",
           headerRight: Platform.select({
             ios: DismissComposeButton,

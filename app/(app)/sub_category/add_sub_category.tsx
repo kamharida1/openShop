@@ -26,23 +26,16 @@ const options = [
 ];
 
 
-export default function AddCategory() {
-  // const [selectedValue, setSelectedValue] = useState("java");
+export default function AddSubCategory() {
   const [isFocus, setIsFocus] = useState(false);
 
   const { id, mode } = useSearchParams();
   
   const [name, setName] = useState('');
-  // const [description, setDesc] = useState('');
-  // const [image, setImage] = useState(null as any);
-  // const [productTypeID, setProductTypeID] = useState("");
   const [categoryID, setCategoryID] = useState("")
-  // const [category, setCategory] = useState(undefined);
   const [subCategory, setSubCategory] = useState(undefined)
-  // const [productTypes, setProductTypes] = useState<ProductType[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
 
-  // const { data } = useDataStore(ProductType);
   const { data } = useDataStore(Category)
 
   useEffect(() => {
@@ -53,7 +46,6 @@ export default function AddCategory() {
     setCategories(options);
   },[data, setCategories])
 
-  // const { data: categories, create } = useDataStore(Category);
   const {data: sub_categories, create} = useDataStore(SubCategory)
 
   // console.warn(categories);
@@ -61,8 +53,6 @@ export default function AddCategory() {
   const router = useRouter();
 
   useEffect(() => {
-    // const category = categories.find((cat) => cat.id === id);
-    // setCategory(category);
     const subCategory = sub_categories.find((subCat) => subCat.id === id);
     setSubCategory(subCategory);
 
@@ -72,18 +62,8 @@ export default function AddCategory() {
     }
   }, [sub_categories, subCategory]);
 
-  // const handleUpdateRecord = async (category) => {
-  //   const original = await DataStore.query(Category, category.id);
-  //   const updated = Category.copyOf(original, (updated) => {
-  //     updated.name = name;
-  //     updated.description = description;
-  //     updated.image = image;
-  //     updated.producttypeID = productTypeID;
-  //   });
-  //   await DataStore.save(updated);
-  // };
   const handleUpdateRecord = async (sub_category) => {
-    const original = await DataStore.query(SubCategory, subCategory.id);
+    const original = await DataStore.query(SubCategory, sub_category.id);
     const updated = SubCategory.copyOf(original, (updated) => {
       updated.name = name;
       updated.categoryID = categoryID;
@@ -93,22 +73,6 @@ export default function AddCategory() {
 
   const handleSaveRecord = (subCat) => create(subCat);
 
-  // const saveRecord = async () => {
-  //   const cat = {
-  //     name,
-  //     description,
-  //     image,
-  //     producttypeID: productTypeID
-  //   };
-  //   mode !== undefined
-  //     ? handleUpdateRecord(category)
-  //     : handleSaveRecord(cat);
-  //   setName("");
-  //   setDesc("");
-  //   setImage("");
-  //   setProductTypeID(null as any)
-  //   router.back();
-  // };
   const saveRecord = async () => {
     const subCat = {
       name,
@@ -122,16 +86,7 @@ export default function AddCategory() {
     router.back();
   };
 
-  const canSave = Boolean(name) && Boolean(categoryID) ;
-
-  // const productTypeOptions = productTypes.map((productType) => (
-  //   <Picker.Item
-  //     key={productType.id}
-  //     label={productType.name}
-  //     value={productType.id}
-  //   />
-  // ));
-
+  const canSave = Boolean(name) && Boolean(categoryID);
 
   return (
     <Screen>

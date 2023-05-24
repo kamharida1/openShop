@@ -44,6 +44,7 @@ export const theme = createTheme({
     danger: palette.darkPink,
     body: palette.black,
     subBody: "rgba(140, 145, 150, 1)",
+    success: palette.greenPrimary
   },
   cardVariants: {
     defaults: {
@@ -131,6 +132,7 @@ export const theme = createTheme({
     m: 16,
     l: 24,
     xl: 40,
+    xxl: 64,
   },
 });
 

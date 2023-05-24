@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { DataStore } from "@aws-amplify/datastore";
 import { useRouter } from "expo-router";
 
-export function useDataStore(model, initialData=[]) {
+export function useDataStore(model, initialData = []) {
   const [data, setData] = useState(initialData);
+  const [loading, setLoading] = useState(false)
 
-  const router = useRouter()
+  const router = useRouter();
 
   async function create(item) {
     const newItem = await DataStore.save(new model(item));
@@ -40,15 +41,28 @@ export function useDataStore(model, initialData=[]) {
     });
   }
 
+  async function saveItems() {
+    try {
+      const savedItems = await DataStore.save(
+        data.map((item) => new model(item))
+      );
+      console.log("Items saved to DataStore:", savedItems);
+    } catch (error) {
+      console.error("Failed to save items to DataStore:", error);
+    }
+  }
+
   useEffect(() => {
+    setLoading(true)
     read();
+    setLoading(false)
+    // saveItems();
     const subscription = DataStore.observe(model).subscribe(() => read());
     return () => subscription.unsubscribe();
   }, []);
 
-  return { data, create, read, update, remove, navigateToUpdate };
+  return { data, loading, create, read, update, remove, navigateToUpdate };
 }
-
 
 // import React from "react";
 // import { View, Text, FlatList, TouchableOpacity } from "react-native";

@@ -1,3 +1,125 @@
+type OrderProduct @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  quantity: String
+  Product: Product @hasOne
+  orderID: ID! @index(name: "byOrder")
+  Order: Order @belongsTo(fields: ["orderID"])
+}
+
+type Order @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  status: OrderStatus
+  OrderProducts: [OrderProduct] @hasMany(indexName: "byOrder", fields: ["id"])
+  userID: ID! @index(name: "byUser")
+  User: User @belongsTo(fields: ["userID"])
+  ShippingAddress: ShippingAddress @hasOne
+  BillingAddress: BillingAddress @hasOne
+  PaymentMethod: PaymentMethod @hasOne
+}
+
+type CartItem @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  quantity: Int
+  cartID: ID! @index(name: "byCart")
+  Cart: Cart @belongsTo(fields: ["cartID"])
+  Product: Product @hasOne
+}
+
+type Cart @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  CartItems: [CartItem] @hasMany(indexName: "byCart", fields: ["id"])
+  User: User @belongsTo
+}
+
+type PaymentMethod @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  type: String
+  cardNumber: String
+  expirationDate: AWSDate
+  cvv: String
+  userID: ID! @index(name: "byUser")
+  User: User @belongsTo(fields: ["userID"])
+  Order: Order @belongsTo
+}
+
+type ShippingAddress @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: String
+  phone: AWSPhone
+  address: String
+  subAddress: String
+  city: String
+  state: String
+  zipCode: String
+  country: String
+  userID: ID! @index(name: "byUser")
+  User: User @belongsTo(fields: ["userID"])
+  Location: Location @hasOne
+  Order: Order @belongsTo
+}
+
+type BillingAddress @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: String
+  Phone: AWSPhone
+  isTheSameAsShipping: Boolean
+  User: User @belongsTo
+  Location: Location @hasOne
+  address: String
+  subAddress: String
+  city: String
+  state: String
+  zipCode: String
+  country: String
+  Order: Order @belongsTo
+}
+
+type DetailsJson {
+  key: String
+  value: String
+}
+
+type Location @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  lat: Float
+  lng: Float
+  ShippingClass: ShippingClass @belongsTo
+  BillingAddress: BillingAddress @belongsTo
+  User: User @belongsTo
+  ShippingAddress: ShippingAddress @belongsTo
+}
+
+type ShippingRate @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  minWeight: Float
+  maxWeight: Float
+  rate: Float
+  shippingclassID: ID! @index(name: "byShippingClass")
+  ShippingClass: ShippingClass @belongsTo(fields: ["shippingclassID"])
+}
+
+type ShippingClass @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  description: String
+  Products: [Product] @hasMany(indexName: "byShippingClass", fields: ["id"])
+  ShippingRates: [ShippingRate] @hasMany(indexName: "byShippingClass", fields: ["id"])
+  Location: Location @hasOne
+}
+
+type Prototype @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  categoryID: ID @index(name: "byCategory")
+  OptionTypes: [OptionType] @hasMany(indexName: "byPrototype", fields: ["id"])
+  Products: [Product] @hasMany(indexName: "byPrototype", fields: ["id"])
+}
+
 enum OrderStatus {
   NEW
   READY_FOR_PICKUP
@@ -6,43 +128,18 @@ enum OrderStatus {
   ACCEPTED
 }
 
-type Order @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  OrderProducts: [OrderProduct] @hasMany(indexName: "byOrder", fields: ["id"])
-  total: Float!
-  status: OrderStatus
-  userID: ID! @index(name: "byUser")
-}
-
-type OrderProduct @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  quantity: Int
-  Product: Product @hasOne
-  orderID: ID! @index(name: "byOrder")
-}
-
-type Basket @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  BasketProducts: [BasketProduct] @hasMany(indexName: "byBasket", fields: ["id"])
-  userID: ID! @index(name: "byUser")
-}
-
-type BasketProduct @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  quantity: Int!
-  Product: Product @hasOne
-  basketID: ID! @index(name: "byBasket")
-}
-
 type User @model @auth(rules: [{allow: public}]) {
   id: ID!
   email: String!
   firstName: String
   lastName: String
   sub: ID!
-  Addresses: [Address] @hasMany(indexName: "byUser", fields: ["id"])
   phone: AWSPhone
-  Baskets: [Basket] @hasMany(indexName: "byUser", fields: ["id"])
+  BillingAddress: BillingAddress @hasOne
+  Location: Location @hasOne
+  ShippinAddresses: [ShippingAddress] @hasMany(indexName: "byUser", fields: ["id"])
+  PaymentMethods: [PaymentMethod] @hasMany(indexName: "byUser", fields: ["id"])
+  Cart: Cart @hasOne
   Orders: [Order] @hasMany(indexName: "byUser", fields: ["id"])
 }
 
@@ -50,8 +147,8 @@ type SubCategory @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String
   Products: [Product] @hasMany(indexName: "bySubCategory", fields: ["id"])
-  OptionTypes: [OptionType] @hasMany(indexName: "bySubCategory", fields: ["id"])
   categoryID: ID! @index(name: "byCategory")
+  OptionTypes: [OptionType] @manyToMany(relationName: "SubCategoryOptionType")
 }
 
 type ProductType @model @auth(rules: [{allow: public}]) {
@@ -59,22 +156,6 @@ type ProductType @model @auth(rules: [{allow: public}]) {
   Products: [Product] @hasMany(indexName: "byProductType", fields: ["id"])
   Categories: [Category] @hasMany(indexName: "byProductType", fields: ["id"])
   name: String!
-}
-
-type Address @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  address: String!
-  subAddress: String
-  city: String
-  country: String!
-  fullAddress: String!
-  lat: Float
-  lng: Float
-  location: String
-  postCode: String
-  state: String
-  isSelected: Boolean
-  userID: ID! @index(name: "byUser")
 }
 
 type Brand @model @auth(rules: [{allow: public}]) {
@@ -87,8 +168,8 @@ type Brand @model @auth(rules: [{allow: public}]) {
 type OptionValue @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String!
-  optiontypeID: ID! @index(name: "byOptionType")
-  OptionType: OptionType @belongsTo(fields: ["optiontypeID"])
+  optiontypeID: ID @index(name: "byOptionType")
+  opttionType: OptionType @belongsTo(fields: ["optiontypeID"])
 }
 
 enum PurposeEnum {
@@ -104,8 +185,10 @@ type OptionType @model @auth(rules: [{allow: public}]) {
   value: String
   placeholder: String
   category: PurposeEnum
+  subcategorys: [SubCategory] @manyToMany(relationName: "SubCategoryOptionType")
   OptionValues: [OptionValue] @hasMany(indexName: "byOptionType", fields: ["id"])
-  subcategoryID: ID! @index(name: "bySubCategory")
+  prototypeID: ID @index(name: "byPrototype")
+  Prototype: Prototype @belongsTo(fields: ["prototypeID"])
 }
 
 type Category @model @auth(rules: [{allow: public}]) {
@@ -116,6 +199,7 @@ type Category @model @auth(rules: [{allow: public}]) {
   Products: [Product] @hasMany(indexName: "byCategory", fields: ["id"])
   producttypeID: ID! @index(name: "byProductType")
   SubCategories: [SubCategory] @hasMany(indexName: "byCategory", fields: ["id"])
+  Prototypes: [Prototype] @hasMany(indexName: "byCategory", fields: ["id"])
 }
 
 type Product @model @auth(rules: [{allow: public}]) {
@@ -125,22 +209,29 @@ type Product @model @auth(rules: [{allow: public}]) {
   about: String!
   images: [String!]
   rating: Float
-  colors: [String]
-  details: AWSJSON
   price: Float!
   mockPrice: Float
-  wholesalePrice: Float
   wholesalePromoPrice: Float
   features: [String]
   published: Boolean
   model: String
   isFeatured: Boolean
   isPromoted: Boolean
-  promoPrice: Float
   categoryID: ID! @index(name: "byCategory")
   Category: Category! @belongsTo(fields: ["categoryID"])
   brandID: ID! @index(name: "byBrand")
   Brand: Brand @belongsTo(fields: ["brandID"])
   producttypeID: ID! @index(name: "byProductType")
   subcategoryID: ID! @index(name: "bySubCategory")
+  prototypeID: ID! @index(name: "byPrototype")
+  Prototype: Prototype @belongsTo(fields: ["prototypeID"])
+  ProductType: ProductType @belongsTo(fields: ["producttypeID"])
+  SubCategory: SubCategory @belongsTo(fields: ["subcategoryID"])
+  promoPrice: Float
+  shippingclassID: ID! @index(name: "byShippingClass")
+  ShippingClass: ShippingClass @belongsTo(fields: ["shippingclassID"])
+  CartItem: CartItem @belongsTo
+  OrderProduct: OrderProduct @belongsTo
+  details: AWSJSON
 }
+ 

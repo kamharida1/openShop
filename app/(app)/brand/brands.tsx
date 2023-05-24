@@ -5,11 +5,12 @@ import { Brand } from "../../../src/models";
 import { useDataStore } from "../../../src/hooks/useDataStoreUpdate";
 import { StyleSheet, Text, View } from "@bacons/react-views";
 import ItemCard from "../../../etc/cards/item_card";
+import { Loading } from "../../../etc/errors/loading";
 
 export default function Brands() {
   
   const brands = useQueriedBrands();
-  const {  navigateToUpdate } = useDataStore(Brand);
+  const {  navigateToUpdate, loading } = useDataStore(Brand);
 
   function useQueriedBrands() {
     // const categories = useAppSelector(selectAllCategories);
@@ -31,10 +32,8 @@ export default function Brands() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Stack.Screen
-        options={{ title: ` Brands (${brands.length})` }}
-      />
-
+      <Stack.Screen options={{ title: ` Brands (${brands.length})` }} />
+      {loading && <Loading />}
       <FlatList
         contentInsetAdjustmentBehavior="automatic"
         scrollEventThrottle={16}
@@ -50,11 +49,11 @@ export default function Brands() {
         stickyHeaderIndices={[0]}
         stickyHeaderHiddenOnScroll
         contentContainerStyle={{
-          flex: 1,
           marginTop: 14,
           marginHorizontal: 16,
           backgroundColor: "fff",
           borderRadius: 10,
+          paddingBottom: 60,
         }}
       />
     </View>

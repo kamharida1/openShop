@@ -1,10 +1,11 @@
 import { Stack, useSearchParams } from "expo-router";
-import { FlatList, TouchableOpacity } from "react-native";
+import { Button, FlatList, TouchableOpacity } from "react-native";
 import { useMemo } from "react";
 import { Category, SubCategory } from "../../../src/models";
 import { useDataStore } from "../../../src/hooks/useDataStoreUpdate";
 import ItemCard from "../../../etc/cards/item_card";
 import { View } from "@bacons/react-views";
+import { DataStore } from "aws-amplify";
 
 export default function SubCategories() {
   
@@ -29,10 +30,24 @@ export default function SubCategories() {
     );
   }
 
+  const load = async () => {
+    sub_categories.map((item) => {
+      DataStore.save(
+        new SubCategory({
+          name: item.name,
+          categoryID: item.categoryID,
+        })
+      );
+    });
+
+    await Promise.all(sub_categories);
+  };
+
   return (
     <View style={{ flex: 1 }}>
-      <Stack.Screen options={{ title: ` Sub Categories (${sub_categories.length})` }} />
-
+      <Stack.Screen
+        options={{ title: ` Sub Categories (${sub_categories.length})` }}
+      />
       <FlatList
         contentInsetAdjustmentBehavior="automatic"
         scrollEventThrottle={16}

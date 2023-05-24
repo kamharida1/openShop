@@ -3,10 +3,6 @@ import { Platform, Pressable } from "react-native";
 import {  Text } from "../../../etc/_Theme";
 import { FontAwesome } from "@expo/vector-icons";
 
-export const unstable_settings = {
-  initialRouteName: "product_types",
-};
-
 export default function ProductTypeLayout() {
   const router = useRouter();
 

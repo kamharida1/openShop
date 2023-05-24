@@ -19,6 +19,8 @@ export default function Categore() {
       <Box flex={1} m="m">
         <Box flex={1} mt="l">
           <Text style={{ fontSize: 20 }}>{optionType?.name}</Text>
+          <Text style={{ color: "gray" }}>{optionType?.placeholder}</Text>
+          <Text style={{ color: "gray", fontSize: 16 }}>{optionType?.category}</Text>
           <ReButton
             variant="primary"
             label="Edit"

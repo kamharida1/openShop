@@ -5,14 +5,17 @@ import { Category } from "../../../src/models";
 import { useDataStore } from "../../../src/hooks/useDataStoreUpdate";
 import ItemCard from "../../../etc/cards/item_card";
 import { View } from "@bacons/react-views";
+import { DataStore } from "aws-amplify";
+import { Button } from "react-native";
+import { Loading } from "../../../etc/errors/loading";
 
 export default function Categories() {
   
   const categories = useQueriedCategories();
-  const {  navigateToUpdate } = useDataStore(Category);
+  const { navigateToUpdate, loading } = useDataStore(Category);
 
   function useQueriedCategories() {
-    const { data: categories } = useDataStore(Category);
+    const { data: categories, } = useDataStore(Category);
 
     const { q } = useSearchParams<{ q: string }>();
 
@@ -28,12 +31,25 @@ export default function Categories() {
     );
   }
 
+  const load = async () => {
+    categories.map((item) => {
+      DataStore.save(
+        new Category({
+          name: item.name,
+          description: item.description,
+          image: item.image,
+          producttypeID: item.producttypeID
+        })
+      );
+    });
+
+    await Promise.all(categories);
+  };
+
   return (
     <View style={{ flex: 1 }}>
-      <Stack.Screen
-        options={{ title: ` Categories (${categories.length})` }}
-      />
-
+      <Stack.Screen options={{ title: ` Categories (${categories.length})` }} />
+      {loading && <Loading />}
       <FlatList
         contentInsetAdjustmentBehavior="automatic"
         scrollEventThrottle={16}
