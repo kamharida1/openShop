@@ -2507,7 +2507,7 @@ export const schema = {
                     "type": {
                         "model": "Category"
                     },
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": [],
                     "association": {
                         "connectionType": "BELONGS_TO",
@@ -2667,7 +2667,7 @@ export const schema = {
                     "name": "details",
                     "isArray": false,
                     "type": "AWSJSON",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "createdAt": {
@@ -2922,5 +2922,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.4.2",
-    "version": "f7dfb9bbdbe3bdc6708039e1bf71f47b"
+    "version": "12d9e02c961542258efd24fd59e71136"
 };

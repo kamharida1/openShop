@@ -218,7 +218,7 @@ type Product @model @auth(rules: [{allow: public}]) {
   isFeatured: Boolean
   isPromoted: Boolean
   categoryID: ID! @index(name: "byCategory")
-  Category: Category! @belongsTo(fields: ["categoryID"])
+  Category: Category @belongsTo(fields: ["categoryID"])
   brandID: ID! @index(name: "byBrand")
   Brand: Brand @belongsTo(fields: ["brandID"])
   producttypeID: ID! @index(name: "byProductType")
@@ -232,6 +232,6 @@ type Product @model @auth(rules: [{allow: public}]) {
   ShippingClass: ShippingClass @belongsTo(fields: ["shippingclassID"])
   CartItem: CartItem @belongsTo
   OrderProduct: OrderProduct @belongsTo
-  details: AWSJSON
+  details: AWSJSON!
 }
  

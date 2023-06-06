@@ -783,7 +783,7 @@ type EagerProduct = {
   readonly isFeatured?: boolean | null;
   readonly isPromoted?: boolean | null;
   readonly categoryID: string;
-  readonly Category: Category;
+  readonly Category?: Category | null;
   readonly brandID: string;
   readonly Brand?: Brand | null;
   readonly producttypeID: string;
@@ -797,7 +797,7 @@ type EagerProduct = {
   readonly ShippingClass?: ShippingClass | null;
   readonly CartItem?: CartItem | null;
   readonly OrderProduct?: OrderProduct | null;
-  readonly details?: string | null;
+  readonly details: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   readonly productCartItemId?: string | null;
@@ -824,7 +824,7 @@ type LazyProduct = {
   readonly isFeatured?: boolean | null;
   readonly isPromoted?: boolean | null;
   readonly categoryID: string;
-  readonly Category: AsyncItem<Category>;
+  readonly Category: AsyncItem<Category | undefined>;
   readonly brandID: string;
   readonly Brand: AsyncItem<Brand | undefined>;
   readonly producttypeID: string;
@@ -838,7 +838,7 @@ type LazyProduct = {
   readonly ShippingClass: AsyncItem<ShippingClass | undefined>;
   readonly CartItem: AsyncItem<CartItem | undefined>;
   readonly OrderProduct: AsyncItem<OrderProduct | undefined>;
-  readonly details?: string | null;
+  readonly details: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   readonly productCartItemId?: string | null;

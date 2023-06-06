@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Button } from "react-native";
-import { signUp } from "../../src/functions/Auth";
+import { Auth, Hub } from "aws-amplify";
+
 import SoftTextInput from "../../etc/forms/soft_text_input";
 
 const SignUpScreen = () => {
@@ -8,7 +9,7 @@ const SignUpScreen = () => {
   const [password, setPassword] = useState("");
 
   const handleSignUp = () => {
-    signUp( email, password )
+    Auth.signUp( email, password )
     console.log("Sign Up:", email, password);
   };
 

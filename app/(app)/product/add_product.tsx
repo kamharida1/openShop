@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDataStore } from "../../../src/hooks/useDataStoreUpdate";
 import { Brand, Category, OptionType, Product, ProductType, SubCategory } from "../../../src/models";
 import { DataStore } from "aws-amplify";
-import ProductForm from "../../../etc/forms/product_form";
+import ProductForm2 from "../../../etc/forms/product_form2";
 
 const initialState = {
   name: "",
@@ -16,13 +16,12 @@ const initialState = {
   categoryID: "",
   producttypeID: "",
   subcategoryID: "",
-  spaPric: 0.0,
 };
 
 export default function AddProduct() {
   const [values, setValues] = useState(initialState);
   const [showOptType, setShowOptType] = useState(false);
-  const [productDetails, setProductDetails] = useState({});
+  // const [productDetails, setProductDetails] = useState({});
   const [optionTypes, setOptionTypes] = useState([])
 
   const { data: products, create } = useDataStore(Product);
@@ -38,13 +37,13 @@ export default function AddProduct() {
   const { data: subsList } = useDataStore(SubCategory);
 
 
-  const saveRecord = async (values: Product) => {
+  const handleSaveRecord = async (values: Product) => {
     const {
       name,
       about,
       count,
       images,
-      details: productDetails,
+      details,
       price,
       mockPrice,
       subcategoryID,
@@ -53,11 +52,11 @@ export default function AddProduct() {
       producttypeID,
     } = values;
     const product = {
-      name,
+      name: name,
       about,
       count,
       images,
-      productDetails,
+      details,
       price,
       mockPrice,
       subcategoryID,
@@ -77,30 +76,31 @@ export default function AddProduct() {
     const optionTypes = await DataStore.query(OptionType, (opt) =>
       opt.subcategorys.subCategory.id.eq(subCatID)
     );
-    setOptionTypes(optionTypes)
+    setOptionTypes(optionTypes);
     setShowOptType(true)
   };
 
   const handleDetailsChange = (name: string, value: string) => {
-    setProductDetails({ ...productDetails, [name]: value });
-    setValues({...values, details: productDetails})
+    // setProductDetails({ ...productDetails, [name]: value });
+    setValues({...values, details: {...values.details, [name]: value}})
   }
 
   return (
-    <ProductForm
+    <ProductForm2
       optionTypes={optionTypes}
+      setOptionTypes={setOptionTypes}
       handleDetailsChange={handleDetailsChange}
       showOptType={showOptType}
       handleSubCategoryChange={handleSubCategoryChange}
       handleChange={handleChange}
       values={values}
       setValues={setValues}
-      details={productDetails}
-      setDetails={setProductDetails}
+      details={values.details}
       categories={categoryList}
       productTypes={productTypeList}
       subCategories={subsList}
       brands={brandList}
+      saveRecord={handleSaveRecord}
     />
-  )
+  );
 }

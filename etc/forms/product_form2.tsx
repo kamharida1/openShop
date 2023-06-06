@@ -1,11 +1,17 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { FC, useEffect, useState } from 'react'
-import { Brand, Category, LazyProduct, OptionType, OptionValue, Product, ProductType, SubCategory } from '../../src/models'
-import { Box } from '../_Theme';
-import TextInput from './text_input';
-import DropdownComponent from './dropdown';
-import { DataStore } from 'aws-amplify';
-import DropDownPicker from "react-native-dropdown-picker";
+import { FC, useEffect, useState } from "react";
+import { Brand, Category, LazyProduct, OptionType, OptionValue, Product, ProductType, SubCategory } from "../../src/models";
+import { Text, View } from "@bacons/react-views";
+import { Box } from "../_Theme";
+import DropdownComponent from "./dropdown";
+import { DataStore } from "aws-amplify";
+import { Picker } from "@react-native-picker/picker";
+import { Button } from "react-native";
+import TextInput from "./text_input";
+import { ScrollView } from "react-native-gesture-handler";
+
+interface MyObject {
+  [key: string]: any;
+}
 
 interface ProductFormT {
   optionTypes: OptionType[];
@@ -15,6 +21,7 @@ interface ProductFormT {
   handleChange: (key: string, value: string) => void;
   values: any;
   setValues: any;
+  setOptionTypes: any;
   details: any;
   saveRecord: (values: LazyProduct) => void;
   brands: Brand[];
@@ -23,31 +30,41 @@ interface ProductFormT {
   productTypes: ProductType[];
 }
 
-const ProductForm: FC<ProductFormT> = ({
+const ProductForm2: FC<ProductFormT> = ({
   optionTypes,
-  showOptType,
-  handleChange,
-  handleDetailsChange,
-  saveRecord,
-  handleSubCategoryChange,
   values,
   setValues,
-  details,
   brands,
+  details,
   categories,
   subCategories,
-  productTypes
+  productTypes,
+  showOptType,
+  handleSubCategoryChange,
+  handleDetailsChange
 }) => {
   const [isFocus, setIsFocus] = useState(false);
   const [brandList, setBrandList] = useState([]);
-  const [brandID, setBrandID] = useState("");
   const [catList, setCatList] = useState([]);
-  const [categoryID, setCategoryID] = useState("");
   const [subList, setSubsList] = useState([]);
-  const [subCategoryID, setSubCategoryID] = useState("");
+  const [subcategoryID, setSubCategoryID] = useState("");
   const [productTypesList, setProductTypeList] = useState([]);
   const [productTypeID, setProductTypeID] = useState(null);
+  const [name, setName] = useState("");
+  const [count, setCount] = useState(0);
+  const [about, setAbout] = useState("");
+  const [images, setImages] = useState([]);
+  const [rating, setRating] = useState(0.0);
+  const [price, setPrice] = useState(0.0);
+  const [categoryID, setCategoryID] = useState("");
+  const [brandID, setBrandID] = useState("");
+  const [producttypeID, setProducttypeID] = useState("");
+  const [prototypeID, setPrototypeID] = useState("");
+  const [shippingclassID, setShippingclassID] = useState("");
+  const [selectedOptionValue, setSelectedOptionValue] = useState('');
   const [optionValues, setOptionValues] = useState([])
+  // const [details, setDetails] = useState({});
+  // const [optionValues, setOptionValues] = useState([]);
 
   useEffect(() => {
     //console.warn(catList);
@@ -56,19 +73,19 @@ const ProductForm: FC<ProductFormT> = ({
       value: option.id,
     }));
     setBrandList(brandOptions);
-    
+
     const catOptions = categories.map((option) => ({
       label: option.name,
       value: option.id,
     }));
     setCatList(catOptions);
-    
+
     const subsOptions = subCategories.map((option) => ({
       label: option.name,
       value: option.id,
     }));
     setSubsList(subsOptions);
-    
+
     const productTypeOptions = productTypes.map((option) => ({
       label: option.name,
       value: option.id,
@@ -76,40 +93,61 @@ const ProductForm: FC<ProductFormT> = ({
     setProductTypeList(productTypeOptions);
   }, [brands, categories, subCategories, productTypes]);
 
-  useEffect(() => {
-    if (optionTypes) {
-      renderDetailsFields(optionTypes)
-    }
-  },[optionTypes, optionValues])
+  // const createProduct = async () => {
+  //   const product = await DataStore.save(
+  //     new Product({
+  //       name,
+  //       count,
+  //       about,
+  //       images,
+  //       rating,
+  //       price,
+  //       categoryID,
+  //       brandID,
+  //       producttypeID,
+  //       subcategoryID,
+  //       prototypeID,
+  //       shippingclassID,
+  //       details: JSON.stringify(details),
+  //     })
+  //   );
 
-  const renderDetailsFields = (optionTypes: OptionType[]) => {
+  //   console.log(product);
+  // };
 
-    async function renderOptionValues(field: OptionType) {
-      // use OptionTypeId to query for optionValues
-      // const comments = await DataStore.query(Comment, (c) =>
-      //   c.post.id.eq("YOUR_POST_ID")
-      // );
-      const optionValues = await DataStore.query(OptionValue, (v) => 
-        v.opttionType.id.eq(field.id)
-      );
+  const buildProductDetails = () => {
+    const details = {};
+    optionTypes.forEach((optionType) => {
+      const { id, name, category } = optionType;
+    })
+  }
 
-      const options = optionValues.map((option) => ({
-        label: option.name,
-        value: option.id,
-      }));
+  const fetchOptionValues = async (optionType: OptionType) => {
+    const { id, name, category } = optionType;
+    const optType = await DataStore.query(OptionType, id);
+    const optValues = await optType?.OptionValues.toArray();
+    const options = optValues?.map((option) => ({
+      label: option.name,
+      value: option.id,
+    }));
+    setOptionValues(options);
+  }
 
-      setOptionValues(options)
-
+  // replace the inner map function with this in showOptType below
+  const renderDetailsForm = (optionTypes: OptionType[]) => {
     return (
       <View style={{ flex: 1, marginHorizontal: 16, marginBottom: 8 }}>
         {optionTypes.map((field, index) => {
+
+          fetchOptionValues(field);
+
           switch (field.category) {
             case "PRODUCT_DETAILS_TEXT":
               return (
                 <Box key={field.id} mb="l">
                   <TextInput
                     placeholder={`${field.placeholder}`}
-                    value={values.details[field.name] || ''}
+                    value={values.details[field.name] || ""}
                     onChangeText={(value) =>
                       handleDetailsChange(field.name, value)
                     }
@@ -131,7 +169,7 @@ const ProductForm: FC<ProductFormT> = ({
                         details: { ...values.details, [field.name]: value },
                       })
                     }
-                    data={getOP}
+                    data={optionValues}
                   />
                 </Box>
               );
@@ -142,34 +180,41 @@ const ProductForm: FC<ProductFormT> = ({
       </View>
     );
   }
+
   return (
-    <View style={{ margin: 8 }}>
-      <Text style={{ fontSize: 30 }}>Hello World</Text>
+    <View style={{ flex: 1, margin: 8 }}>
+      <Text style={{ fontSize: 20, padding: 5 }}>Hello World</Text>
       <Box mb="l">
         <DropdownComponent
           value={productTypeID}
           isFocus={isFocus}
           setIsFocus={setIsFocus}
-          setValue={(value: string) => setValues({ ...values, productTypeID: value })
+          setValue={(value: string) =>
+            setValues({ ...values, productTypeID: value })
           }
           data={productTypesList}
         />
       </Box>
       <Box>
         <DropdownComponent
-          value={subCategoryID}
+          value={subcategoryID}
           isFocus={isFocus}
           setIsFocus={setIsFocus}
           setValue={(value: string) => handleSubCategoryChange(value)}
           data={subList}
         />
-        {/* {optionTypes.map(opt => <Text key={opt.id}>{opt.name}</Text>)} */}
-        {showOptType && renderDetailsFields(optionTypes)}
       </Box>
+      {showOptType && (
+        // optionTypes.map(opt => <Text>{opt.name}</Text> )
+        <ScrollView style={{ flex: 1 }}>
+          {renderDetailsForm(optionTypes)}
+        </ScrollView>
+      )}
+      <Button title="Create Product" onPress={() => {}} />
     </View>
   );
 }
 
-export default ProductForm;
 
-const styles = StyleSheet.create({})
+
+export default ProductForm2

@@ -14,7 +14,7 @@ const data = [
   { label: "Item 8", value: "8" },
 ];
 
-const DropdownComponent = ({value, setValue, isFocus, setIsFocus, data }) => {
+const DropdownComponent = ({value, setValue, isFocus, setIsFocus, data, ...props }) => {
 
   const renderLabel = () => {
     if (value || isFocus) {
@@ -58,6 +58,7 @@ const DropdownComponent = ({value, setValue, isFocus, setIsFocus, data }) => {
             size={20}
           />
         )}
+        {...props}
       />
     </View>
   );

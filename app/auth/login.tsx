@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { View, TextInput, Button } from "react-native";
+import { View, Button } from "react-native";
 import { Auth, Hub } from "aws-amplify";
-import { signIn } from "../../src/functions/Auth";
 import SoftTextInput from "../../etc/forms/soft_text_input";
 
 const LoginScreen = () => {
@@ -25,7 +24,7 @@ const LoginScreen = () => {
   }, []);
 
   const handleSignIn = () => {
-    signIn(email, password);
+    Auth.signIn(email, password);
   };
 
   const handleForgotPassword = () => {
