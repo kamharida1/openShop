@@ -3,6 +3,7 @@ import { useDataStore } from "../../../src/hooks/useDataStoreUpdate";
 import { Brand, Category, OptionType, Product, ProductType, SubCategory } from "../../../src/models";
 import { DataStore } from "aws-amplify";
 import ProductForm2 from "../../../etc/forms/product_form2";
+import ProdForm from "../../../etc/forms/fake_product_form";
 
 const initialState = {
   name: "",

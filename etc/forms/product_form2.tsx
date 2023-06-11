@@ -1,17 +1,23 @@
 import { FC, useEffect, useState } from "react";
-import { Brand, Category, LazyProduct, OptionType, OptionValue, Product, ProductType, SubCategory } from "../../src/models";
+import {
+  Brand,
+  Category,
+  LazyProduct,
+  OptionType,
+  OptionValue,
+  ProductType,
+  SubCategory,
+} from "../../src/models";
+import DropdownComponent from "./dropdown";
 import { Text, View } from "@bacons/react-views";
 import { Box } from "../_Theme";
-import DropdownComponent from "./dropdown";
-import { DataStore } from "aws-amplify";
-import { Picker } from "@react-native-picker/picker";
 import { Button } from "react-native";
 import TextInput from "./text_input";
 import { ScrollView } from "react-native-gesture-handler";
-
-interface MyObject {
-  [key: string]: any;
-}
+import RNPickerSelect from "react-native-picker-select";
+import { DataStore } from "aws-amplify";
+import DetailsForm from "./details_form";
+import { KeyboardAvoidingWrapper } from "../views/keyboard_avoiding_wrapper";
 
 interface ProductFormT {
   optionTypes: OptionType[];
@@ -41,8 +47,9 @@ const ProductForm2: FC<ProductFormT> = ({
   productTypes,
   showOptType,
   handleSubCategoryChange,
-  handleDetailsChange
+  handleDetailsChange,
 }) => {
+  const [dropdownFocus, setDropdownFocus] = useState<boolean[]>([]);
   const [isFocus, setIsFocus] = useState(false);
   const [brandList, setBrandList] = useState([]);
   const [catList, setCatList] = useState([]);
@@ -61,10 +68,9 @@ const ProductForm2: FC<ProductFormT> = ({
   const [producttypeID, setProducttypeID] = useState("");
   const [prototypeID, setPrototypeID] = useState("");
   const [shippingclassID, setShippingclassID] = useState("");
-  const [selectedOptionValue, setSelectedOptionValue] = useState('');
-  const [optionValues, setOptionValues] = useState([])
-  // const [details, setDetails] = useState({});
-  // const [optionValues, setOptionValues] = useState([]);
+  const [optionValues, setOptionValues] = useState<OptionValue[]>([]);
+
+  const [selectedValues, setSelectedValues] = useState({});
 
   useEffect(() => {
     //console.warn(catList);
@@ -93,128 +99,70 @@ const ProductForm2: FC<ProductFormT> = ({
     setProductTypeList(productTypeOptions);
   }, [brands, categories, subCategories, productTypes]);
 
-  // const createProduct = async () => {
-  //   const product = await DataStore.save(
-  //     new Product({
-  //       name,
-  //       count,
-  //       about,
-  //       images,
-  //       rating,
-  //       price,
-  //       categoryID,
-  //       brandID,
-  //       producttypeID,
-  //       subcategoryID,
-  //       prototypeID,
-  //       shippingclassID,
-  //       details: JSON.stringify(details),
-  //     })
-  //   );
+  const handleDropdownFocus = (index) => {
+    const updatedFocus: boolean[] = [...dropdownFocus];
+    updatedFocus[index] = true;
+    setDropdownFocus(updatedFocus);
+  };
 
-  //   console.log(product);
-  // };
+  const handleDropdownblur = (index) => {
+    const updatedFocus = [...dropdownFocus];
+    updatedFocus[index] = false;
+    setDropdownFocus(updatedFocus);
+  };
 
-  const buildProductDetails = () => {
-    const details = {};
-    optionTypes.forEach((optionType) => {
-      const { id, name, category } = optionType;
-    })
-  }
-
-  const fetchOptionValues = async (optionType: OptionType) => {
-    const { id, name, category } = optionType;
-    const optType = await DataStore.query(OptionType, id);
-    const optValues = await optType?.OptionValues.toArray();
-    const options = optValues?.map((option) => ({
-      label: option.name,
-      value: option.id,
+  const handleDropdownValueChange = (value, label) => {
+    setSelectedValues((previousValues) => ({
+      ...previousValues,
+      [label]: value,
     }));
-    setOptionValues(options);
-  }
+  };
 
-  // replace the inner map function with this in showOptType below
-  const renderDetailsForm = (optionTypes: OptionType[]) => {
-    return (
-      <View style={{ flex: 1, marginHorizontal: 16, marginBottom: 8 }}>
-        {optionTypes.map((field, index) => {
-
-          fetchOptionValues(field);
-
-          switch (field.category) {
-            case "PRODUCT_DETAILS_TEXT":
-              return (
-                <Box key={field.id} mb="l">
-                  <TextInput
-                    placeholder={`${field.placeholder}`}
-                    value={values.details[field.name] || ""}
-                    onChangeText={(value) =>
-                      handleDetailsChange(field.name, value)
-                    }
-                  />
-                </Box>
-              );
-            case "PRODUCT_DETAILS_SELECT":
-              return (
-                <Box key={field.id} mb="l">
-                  <DropdownComponent
-                    mode={"modal"}
-                    value={values.details[field.name]}
-                    isFocus={isFocus}
-                    setIsFocus={setIsFocus}
-                    // setValue={(value: string) => handleDetailsChange(field.name, value) }
-                    setValue={(value: string) =>
-                      setValues({
-                        ...values,
-                        details: { ...values.details, [field.name]: value },
-                      })
-                    }
-                    data={optionValues}
-                  />
-                </Box>
-              );
-            default:
-              return null;
-          }
-        })}
-      </View>
-    );
-  }
+  // console.warn("Selected Values:", selectedValues);
+  // console.log(optionValues);
 
   return (
-    <View style={{ flex: 1, margin: 8 }}>
-      <Text style={{ fontSize: 20, padding: 5 }}>Hello World</Text>
-      <Box mb="l">
-        <DropdownComponent
-          value={productTypeID}
-          isFocus={isFocus}
-          setIsFocus={setIsFocus}
-          setValue={(value: string) =>
-            setValues({ ...values, productTypeID: value })
-          }
-          data={productTypesList}
-        />
-      </Box>
-      <Box>
-        <DropdownComponent
-          value={subcategoryID}
-          isFocus={isFocus}
-          setIsFocus={setIsFocus}
-          setValue={(value: string) => handleSubCategoryChange(value)}
-          data={subList}
-        />
-      </Box>
-      {showOptType && (
-        // optionTypes.map(opt => <Text>{opt.name}</Text> )
-        <ScrollView style={{ flex: 1 }}>
-          {renderDetailsForm(optionTypes)}
-        </ScrollView>
-      )}
-      <Button title="Create Product" onPress={() => {}} />
-    </View>
+    <KeyboardAvoidingWrapper>
+      <View style={{ flex: 1, margin: 8 }}>
+        <Text style={{ fontSize: 20, padding: 5 }}>Hello World</Text>
+        <Box mb="l">
+          <DropdownComponent
+            value={productTypeID}
+            isFocus={isFocus}
+            setIsFocus={setIsFocus}
+            setValue={(value: string) =>
+              setValues({ ...values, productTypeID: value })
+            }
+            data={productTypesList}
+          />
+        </Box>
+        <Box>
+          <DropdownComponent
+            value={subcategoryID}
+            isFocus={isFocus}
+            setIsFocus={setIsFocus}
+            setValue={(value: string) => handleSubCategoryChange(value)}
+            data={subList}
+          />
+        </Box>
+        {showOptType &&
+          optionTypes.map((opt, index) => (
+            <View key={opt.id}>
+              <DetailsForm
+                opt={opt}
+                index={index}
+                handleDropdownFocus={handleDropdownFocus}
+                handleDropdownBlur={handleDropdownblur}
+                handleDropdownValueChange={handleDropdownValueChange}
+                selectedValues={selectedValues}
+              />
+            </View>
+          ))}
+        <Text>{ JSON.stringify(selectedValues)}</Text>
+        <Button title="Create Product" onPress={() => {}} />
+      </View>
+    </KeyboardAvoidingWrapper>
   );
-}
+};
 
-
-
-export default ProductForm2
+export default ProductForm2;
