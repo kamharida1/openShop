@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { Screen } from "../../../etc/views/screen";
 import { Box } from "../../../etc/_Theme";
 import TextInput from "../../../etc/forms/text_input";
-import { Picker } from "@react-native-picker/picker";
 import { Image } from "@bacons/react-views";
 import { Button } from "../../../etc/buttons/button";
 import { DataStore } from "aws-amplify";
@@ -17,16 +16,8 @@ import { StyleSheet } from "react-native";
 
 const PlaceholderImageSource = "https://picsum.photos/200/300";
 
-const options = [
-  { label: "Java", value: "java" },
-  { label: "JavaScript", value: "js" },
-  { label: "Python", value: "python" },
-  { label: "Swift", value: "swift" },
-];
-
 
 export default function AddCategory() {
-  // const [selectedValue, setSelectedValue] = useState("java");
   const [isFocus, setIsFocus] = useState(false);
 
   const { id, mode } = useSearchParams();
@@ -98,14 +89,6 @@ export default function AddCategory() {
 
   const canSave = Boolean(name) && Boolean(description) && Boolean(productTypeID) && Boolean(image);
 
-  const productTypeOptions = productTypes.map((productType) => (
-    <Picker.Item
-      key={productType.id}
-      label={productType.name}
-      value={productType.id}
-    />
-  ));
-
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -146,7 +129,6 @@ export default function AddCategory() {
           />
         </Box>
         <Box mt="xl" mb="l" justifyContent="space-around">
-          {/* <ReButtonBButt onPress={pickImage} label={"Pick an Image"} /> */}
           <Button
             onPress={pickImage}
             textStyle={{
@@ -169,11 +151,6 @@ export default function AddCategory() {
             }}
           />
         </Box>
-        {/* <ReButton
-          onPress={saveRecord}
-          label={mode === "update" ? "Update" : "Create"}
-          variant="primary"
-        /> */}
         <Button
           onPress={saveRecord}
           buttonStyle={{

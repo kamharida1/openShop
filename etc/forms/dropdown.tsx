@@ -69,7 +69,7 @@ export default DropdownComponent;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#eee",
-    padding: 16,
+    //padding: 16,
   },
   dropdown: {
     height: 50,

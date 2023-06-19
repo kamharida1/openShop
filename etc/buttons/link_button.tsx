@@ -2,7 +2,7 @@ import { Pressable, Text, View } from "@bacons/react-views";
 import { Link } from "expo-router";
 
 interface LinkButtonT {
-  children: string;
+  title: string;
   onPress?: () => void;
   style?: any;
   buttonStyle?: any;
@@ -11,7 +11,7 @@ interface LinkButtonT {
 }
 
 export const LinkButton =({
-  children,
+  title,
   onPress,
   style,
   buttonStyle,
@@ -44,7 +44,7 @@ export const LinkButton =({
                 textStyle,
               ]}
             >
-              {children}
+              {title}
             </Text>
           </View>
         )}
@@ -52,3 +52,54 @@ export const LinkButton =({
     </Link>
   );
 }
+
+export const data = [
+  {
+    id: "1",
+    title: "Categories",
+    link: "(app)/category/categories",
+    style: { alignSelf: "center", marginTop: 16, width: 300 },
+  },
+  {
+    id: "2",
+    title: "Prototypes",
+    link: "(app)/prototype/prototypes",
+    style: { alignSelf: "center", marginTop: 16, width: 300 },
+  },
+  {
+    id: "3",
+    title: "Products",
+    link: "(app)/product/products",
+    style: { alignSelf: "center", marginTop: 16, width: 300 },
+  },
+  {
+    id: "4",
+    title: "Brands",
+    link: "(app)/brand/brands",
+    style: { alignSelf: "center", marginTop: 16, width: 300 },
+  },
+  {
+    id: "5",
+    title: "Sub Categories",
+    link: "(app)/sub_category/sub_categories",
+    style: { alignSelf: "center", marginTop: 16, width: 300 },
+  },
+  {
+    id: "6",
+    title: "Option Types",
+    link: "(app)/option_type/option_types",
+    style: { alignSelf: "center", marginTop: 16, width: 300 },
+  },
+  {
+    id: "7",
+    title: "Option Values",
+    link: "(app)/option_value/option_values",
+    style: { alignSelf: "center", marginTop: 16, width: 300 },
+  },
+  {
+    id: "8",
+    title: "Product Types",
+    link: "(app)/category/categories",
+    style: { alignSelf: "center", marginTop: 16, width: 300 },
+  },
+];

@@ -1,12 +1,12 @@
-import { Button, Pressable, StyleSheet, Text, View } from "react-native";
+import { Button, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import "@azure/core-asynciterator-polyfill";
-import { LinkButton } from "../etc/buttons/link_button";
+import { LinkButton, data } from "../etc/buttons/link_button";
 import { DataStore } from "aws-amplify";
 import { ExpoSQLiteAdapter } from "@aws-amplify/datastore-storage-adapter/ExpoSQLiteAdapter";
 import Toast from "react-native-root-toast";
 import { ReButton } from "../etc/buttons/re_button";
-import { Screen } from "../etc/views/screen";
 import { useAuthenticator, withAuthenticator } from "@aws-amplify/ui-react-native";
+import tw from 'twrnc'
 
 import Animated, {
   Easing,
@@ -15,6 +15,9 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import { useRouter } from "expo-router";
+import { FlatList } from "react-native-gesture-handler";
+
 
 DataStore.configure({
   storageAdapter: ExpoSQLiteAdapter,
@@ -27,6 +30,8 @@ function SignOutButton() {
 
 function Page() {
   const circleSize = useSharedValue(100);
+
+  const router = useRouter();
 
   async function clearDataStore() {
     await DataStore.clear();
@@ -54,9 +59,16 @@ function Page() {
     return { width: circleSize.value, height: circleSize.value };
   });
 
-  return (
-    <Screen scroll style={styles.container}>
-      <View style={styles.main}>
+  const renderItem = ({ item }: any) => (
+    <LinkButton
+      title={item.title}
+      link={item.link}
+      style={item.style}
+    />
+  )
+
+  const renderHeader = () => (
+     <View style={tw`items-center`}>
         <Pressable onPress={onPress}>
           <Animated.View
             style={[
@@ -70,57 +82,22 @@ function Page() {
             ]}
           />
         </Pressable>
-        <Text style={styles.title}>Hello World</Text>
-        <Text style={styles.subtitle}>This is the first page of your app.</Text>
-        <LinkButton
-          link="(app)/category/categories"
-          style={{ alignSelf: "center", marginTop: 16, width: 300 }}
+        <Text style={tw`text-3xl font-bold text-center text-neutral-900`}>Hello World</Text>
+        <Text style={tw`text-xl font-medium text-center text-neutral-400 `}>This is the first page of your app.</Text>
+        <Pressable
+          onPress={() => router.push("(app)/misc")}
+          style={tw` w-70 my-4 bg-blue-500 py-2 px-4 rounded-md shadow`}
         >
-          Categories
-        </LinkButton>
-        <LinkButton
-          link="(app)/prototype/prototypes"
-          style={{ alignSelf: "center", marginTop: 16, width: 300 }}
-        >
-          Prototypes
-        </LinkButton>
-        <LinkButton
-          link="(app)/product/products"
-          style={{ alignSelf: "center", marginTop: 16, width: 300 }}
-        >
-          Products
-        </LinkButton>
-        <LinkButton
-          link="(app)/brand/brands"
-          style={{ alignSelf: "center", marginTop: 16, width: 300 }}
-        >
-          Brands
-        </LinkButton>
-        <LinkButton
-          link="(app)/sub_category/sub_categories"
-          style={{ alignSelf: "center", marginTop: 16, width: 300 }}
-        >
-          Sub Categories
-        </LinkButton>
-        <LinkButton
-          link="(app)/option_type/option_types"
-          style={{ alignSelf: "center", marginTop: 16, width: 300 }}
-        >
-          Option Types
-        </LinkButton>
-        <LinkButton
-          link="(app)/option_value/option_values"
-          style={{ alignSelf: "center", marginTop: 16, width: 300 }}
-        >
-          Option Values
-        </LinkButton>
-        <LinkButton
-          link="(app)/product_type/product_types"
-          style={{ alignSelf: "center", marginTop: 16, width: 300 }}
-        >
-          ProductTypes
-        </LinkButton>
-        <ReButton
+          <Text style={tw`text-center text-white text-lg font-semibold`}>
+            Misc
+          </Text>
+        </Pressable>
+      </View>
+  )
+
+  const renderFooter = () => (
+    <View>
+       <ReButton
           variant="default"
           label="Clear Datastore"
           onPress={clearDataStore}
@@ -130,38 +107,26 @@ function Page() {
             paddingHorizontal: 12,
             borderWidth: 2,
             borderColor: "#010127",
-            // backgroundColor: "transparent",
             width: 300,
           }}
         />
         <SignOutButton />
-      </View>
-    </Screen>
-  );
+    </View>
+  )
+
+  return (
+    <View style={tw`flex-1 items-center justify-center bg-white`}>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        ListHeaderComponent={renderHeader}
+        ListFooterComponent={renderFooter}
+        contentContainerStyle={tw`pt-8 pb-16`}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
+  )
 }
 
 export default withAuthenticator(Page)
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    padding: 24,
-  },
-  main: {
-    flex: 1,
-    justifyContent: "flex-start",
-    maxWidth: 960,
-    marginHorizontal: "auto",
-    paddingTop: 40,
-    paddingHorizontal: 6,
-  },
-  title: {
-    fontSize: 64,
-    fontWeight: "bold",
-  },
-  subtitle: {
-    fontSize: 20,
-    color: "#38434D",
-  },
-});

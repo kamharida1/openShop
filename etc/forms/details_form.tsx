@@ -5,7 +5,7 @@ import { Box } from "../_Theme";
 import TextInput from "./text_input";
 import RNPickerSelect from "react-native-picker-select";
 import { View } from "@bacons/react-views";
-import Text from "@bacons/react-views/build/Text";
+import DropdownComponent from "./dropdown";
 
 
 interface DetailsT {
@@ -44,7 +44,7 @@ export default function DetailsForm(props: DetailsT) {
       displayComponent = (
         <Box key={opt.id} mb="l">
           <TextInput
-            placeholder={`${opt.placeholder}`}
+            placeholder={`${opt.name}`}
             value={selectedValues[opt.name] || ""}
             onChangeText={(value) => handleDropdownValueChange(value, opt.name)}
           />
@@ -64,6 +64,7 @@ export default function DetailsForm(props: DetailsT) {
             }))}
             onOpen={() => handleDropdownFocus(index)}
             onClose={() => handleDropdownBlur(index)}
+            placeholder={{label: opt.name, value: null}}
           />
         </Box>
       );
