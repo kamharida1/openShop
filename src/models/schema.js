@@ -2556,7 +2556,7 @@ export const schema = {
                     "name": "prototypeID",
                     "isArray": false,
                     "type": "ID",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "Prototype": {
@@ -2615,7 +2615,7 @@ export const schema = {
                     "name": "shippingclassID",
                     "isArray": false,
                     "type": "ID",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "ShippingClass": {
@@ -2922,5 +2922,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.4.2",
-    "version": "12d9e02c961542258efd24fd59e71136"
+    "version": "f8b34395d5238e517cf17aa2d4772f5f"
 };

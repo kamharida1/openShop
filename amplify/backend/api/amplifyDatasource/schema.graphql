@@ -223,12 +223,12 @@ type Product @model @auth(rules: [{allow: public}]) {
   Brand: Brand @belongsTo(fields: ["brandID"])
   producttypeID: ID! @index(name: "byProductType")
   subcategoryID: ID! @index(name: "bySubCategory")
-  prototypeID: ID! @index(name: "byPrototype")
+  prototypeID: ID @index(name: "byPrototype")
   Prototype: Prototype @belongsTo(fields: ["prototypeID"])
   ProductType: ProductType @belongsTo(fields: ["producttypeID"])
   SubCategory: SubCategory @belongsTo(fields: ["subcategoryID"])
   promoPrice: Float
-  shippingclassID: ID! @index(name: "byShippingClass")
+  shippingclassID: ID @index(name: "byShippingClass")
   ShippingClass: ShippingClass @belongsTo(fields: ["shippingclassID"])
   CartItem: CartItem @belongsTo
   OrderProduct: OrderProduct @belongsTo

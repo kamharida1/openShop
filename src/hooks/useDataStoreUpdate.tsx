@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { DataStore } from "@aws-amplify/datastore";
 import { useRouter } from "expo-router";
 
-export function useDataStore(model, initialData = []) {
+export function useDataStore(model: any, initialData = []) {
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(false)
 

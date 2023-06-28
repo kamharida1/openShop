@@ -49,10 +49,6 @@ export default function ProductGrid() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: "#F5F5F5",
-  },
   city: {
     flex: 1,
     aspectRatio: 1,

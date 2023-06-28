@@ -6,7 +6,7 @@ import ProductForm2 from "../../../etc/forms/product_form2";
 
 export default function AddProduct() {
   const [showOptType, setShowOptType] = useState(false);
-  const [optionTypes, setOptionTypes] = useState([])
+  const [optionTypes, setOptionTypes] = useState<OptionType[]>([])
 
   const { data: brandList } = useDataStore(Brand);
   

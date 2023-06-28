@@ -4,6 +4,7 @@ import {
   Category,
   LazyProduct,
   OptionType,
+  Product,
   ProductType,
   SubCategory,
 } from "../../src/models";
@@ -18,6 +19,8 @@ import DetailsForm from "./details_form";
 import { KeyboardAvoidingWrapper } from "../views/keyboard_avoiding_wrapper";
 import TextInput from "./text_input";
 import { Button } from "../buttons/button";
+import { useDataStore } from "../../src/hooks/useDataStoreUpdate";
+import { useRouter } from "expo-router";
 
 
 interface ProductFormT {
@@ -61,9 +64,13 @@ const ProductForm2: FC<ProductFormT> = ({
   // const [shippingclassID, setShippingclassID] = useState("");
   // const [optionValues, setOptionValues] = useState<OptionValue[]>([]);
 
+  const { data, create } = useDataStore(Product);
+  
   const [selectedValues, setSelectedValues] = useState({});
 
-  const handleCreateProduct = () => {
+  const router = useRouter();
+
+  const handleCreateProduct = async() => {
     const product = {
       name,
       count,
@@ -77,7 +84,8 @@ const ProductForm2: FC<ProductFormT> = ({
       subcategoryID,
       details: JSON.stringify(selectedValues),
     };
-    console.warn(product)
+    await create(product);
+    router.back();
   }
 
   useEffect(() => {
@@ -191,7 +199,7 @@ const ProductForm2: FC<ProductFormT> = ({
             value={subcategoryID}
             isFocus={isFocus}
             setIsFocus={setIsFocus}
-            setValue={(value: string) => handleSubCategoryChange(value)}
+            setValue={(value: string) => { setSubCategoryID(value); handleSubCategoryChange(value); }}
             data={subList}
           />
         </Box>
@@ -265,7 +273,7 @@ const ProductForm2: FC<ProductFormT> = ({
           <TextInput
             value={price}
             placeholder="Price"
-            onChangeText={(text) => handleInputNumberChange(text, setPrice)}
+            onChangeText={(text) => handleInputNumberChange(+text, setPrice)}
             keyboardType="decimal-pad"
           />
         </Box>
@@ -273,7 +281,7 @@ const ProductForm2: FC<ProductFormT> = ({
           <TextInput
             value={rating}
             placeholder="Product rating"
-            onChangeText={(text) => handleInputNumberChange(text, setRating)}
+            onChangeText={(text) => handleInputNumberChange(+text, setRating)}
             keyboardType="decimal-pad"
           />
         </Box>

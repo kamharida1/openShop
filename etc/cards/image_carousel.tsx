@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import React, { useState, useCallback } from "react";
 import {
   View,
@@ -5,10 +6,18 @@ import {
   FlatList,
   StyleSheet,
   useWindowDimensions,
+  Pressable,
 } from "react-native";
+import { Product } from "../../src/models";
 
 
-const ImageCarousel = ({ images }: { images: string[] }) => {
+const ImageCarousel = ({
+  product,
+  onImagePress,
+}: {
+  product: Product;
+  onImagePress: (index: number) => void;
+}) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const windowWidth = useWindowDimensions().width;
 
@@ -22,15 +31,22 @@ const ImageCarousel = ({ images }: { images: string[] }) => {
   return (
     <View style={styles.root}>
       <FlatList
-        data={images}
-        renderItem={({ item }) => (
-          <Image
-            style={[styles.image, { width: windowWidth - 20 }]}
-            source={{ uri: item }}
-            resizeMode="cover"
-          />
-        )}
-        keyExtractor={(item)=>item.toString()}
+        data={product?.images}
+        renderItem={({ item, index }) => {
+          const handleItemClick = () => {
+            onImagePress(index);
+          };
+          return (
+            <Pressable onPress={handleItemClick}>
+              <Image
+                style={[styles.image, { width: windowWidth - 20 }]}
+                source={{ uri: item }}
+                resizeMode="cover"
+              />
+            </Pressable>
+          );
+        }}
+        keyExtractor={(item) => item.toString()}
         horizontal
         showsHorizontalScrollIndicator={false}
         snapToInterval={windowWidth}
@@ -41,9 +57,8 @@ const ImageCarousel = ({ images }: { images: string[] }) => {
         }}
         onViewableItemsChanged={onFlatlistUpdate}
       />
-
       <View style={styles.dots}>
-        {images.map((image, index) => (
+        {product?.images.map((_, index) => (
           <View
             key={index}
             style={[
